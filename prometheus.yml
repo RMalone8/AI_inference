@@ -15,8 +15,8 @@ scrape_configs:
     static_configs:
       - targets: ['ollama-stats:8000']
 
-# remote_write:s
-#   - url: '<Your Prometheus remote_write endpoint>'
-#     basic_auth:
-#       username: '<Your Grafana Username>'
-#       password: '<Your Grafana Cloud Access Policy Token>'
+remote_write:
+  - url: 'http://rmalone.grafana.net'
+    basic_auth:
+      username: 'rmalone'
+      password: '<Your Grafana Cloud Access Policy Token>'

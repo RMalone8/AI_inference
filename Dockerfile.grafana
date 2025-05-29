@@ -1,0 +1,4 @@
+FROM grafana/grafana
+COPY dashboards.yaml /etc/grafana/provisioning/dashboards/dashboards.yaml
+COPY datasources.yaml /etc/grafana/provisioning/datasources/datasources.yaml
+COPY dashboard.json /var/lib/grafana/dashboards/dashboard.json

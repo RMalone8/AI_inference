@@ -1,17 +1,23 @@
 services:
-  ollama-server:
+  ollama-server-gemma:
     image: ollama/ollama:latest
-    ports:
-      - "11434:11434"
     volumes:
       - ollama_models:/root/.ollama
     restart: unless-stopped
+
+  ollama-server-moondream:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+
   ollama-stats:
     build:
       context: .
       dockerfile: Dockerfile.stats
     depends_on:
-      - ollama-server
+      - ollama-server-gemma
+      - ollama-server-moondream
     volumes:
       - /run/podman/podman.sock:/tmp/podman.sock
 
@@ -20,19 +26,19 @@ services:
       context: .
       dockerfile: Dockerfile.client
     depends_on:
-      - ollama-server
+      - ollama-server-gemma
     environment:
-      - OLLAMA_HOST=http://ollama-server:11434
+      - OLLAMA_HOST=http://ollama-server-gemma:11434
     command: >
       sh -c "
         echo 'Waiting for Ollama server to be ready...' &&
-        while ! curl -s http://ollama-server:11434/api/tags > /dev/null; do
+        while ! curl -s http://ollama-server-gemma:11434/api/tags > /dev/null; do
           sleep 5;
         done;
         echo 'Ollama server is ready. Pulling gemma3:1b model... (This may take a while)';
-        curl -X POST http://ollama-server:11434/api/pull -d '{\"name\": \"gemma3:1b\"}' || true;
+        curl -X POST http://ollama-server-gemma:11434/api/pull -d '{\"name\": \"gemma3:1b\"}' || true;
         echo 'Running gemma3:1b model with a simple prompt:';
-        curl -X POST http://ollama-server:11434/api/generate -d '{
+        curl -X POST http://ollama-server-gemma:11434/api/generate -d '{
           \"model\": \"gemma3:1b\",
           \"prompt\": \"Why is the sky blue?\",
           \"stream\": false
@@ -44,19 +50,19 @@ services:
         context: .
         dockerfile: Dockerfile.client
       depends_on:
-        - ollama-server
+        - ollama-server-moondream
       environment:
-        - OLLAMA_HOST=http://ollama-server:11434
+        - OLLAMA_HOST=http://ollama-server-moondream:11434
       command: >
         sh -c "
           echo 'Waiting for Ollama server to be ready...' &&
-          while ! curl -s http://ollama-server:11434/api/tags > /dev/null; do
+          while ! curl -s http://ollama-server-moondream:11434/api/tags > /dev/null; do
             sleep 5;
           done;
           echo 'Ollama server is ready. Pulling moondream:1.8b model... (This may take a while)';
-          curl -X POST http://ollama-server:11434/api/pull -d '{\"name\": \"moondream:1.8b\"}' || true;
+          curl -X POST http://ollama-server-moondream:11434/api/pull -d '{\"name\": \"moondream:1.8b\"}' || true;
           echo 'Running moondream:1.8b model with a simple prompt:';
-          curl -X POST http://ollama-server:11434/api/generate -d '{
+          curl -X POST http://ollama-server-moondream:11434/api/generate -d '{
             \"model\": \"moondream:1.8b\",
             \"prompt\": \"Why is the sky blue?\",
             \"stream\": false
@@ -78,6 +84,13 @@ services:
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     expose:
       - 9100
+  
+  grafana:
+    build:
+      context: .
+      dockerfile: Dockerfile.grafana
+    ports:
+      - "3000:3000"
 
   prometheus:
     image: prom/prometheus:latest
