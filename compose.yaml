@@ -1,5 +1,5 @@
 services:
-  ollama-server-gemma:
+  ollama-server-llava-phi:
     image: ollama/ollama:latest
     volumes:
       - ollama_models:/root/.ollama
@@ -16,31 +16,31 @@ services:
       context: .
       dockerfile: Dockerfile.stats
     depends_on:
-      - ollama-server-gemma
+      - ollama-server-llava-phi
       - ollama-server-moondream
     volumes:
       - /run/podman/podman.sock:/tmp/podman.sock
 
-  ollama-client-gemma:
+  ollama-client-llava-phi:
     build:
       context: .
       dockerfile: Dockerfile.client
     depends_on:
-      - ollama-server-gemma
+      - ollama-server-llava-phi
     environment:
-      - OLLAMA_HOST=http://ollama-server-gemma:11434
+      - OLLAMA_HOST=http://ollama-server-llava-phi:11434
     command: >
       sh -c "
         echo 'Waiting for Ollama server to be ready...' &&
-        while ! curl -s http://ollama-server-gemma:11434/api/tags > /dev/null; do
+        while ! curl -s http://ollama-server-llava-phi:11434/api/tags > /dev/null; do
           sleep 5;
         done;
-        echo 'Ollama server is ready. Pulling gemma3:1b model... (This may take a while)';
-        curl -X POST http://ollama-server-gemma:11434/api/pull -d '{\"name\": \"gemma3:1b\"}' || true;
-        echo 'Running gemma3:1b model with a simple prompt:';
-        curl -X POST http://ollama-server-gemma:11434/api/generate -d '{
-          \"model\": \"gemma3:1b\",
-          \"prompt\": \"Why is the sky blue?\",
+        echo 'Ollama server is ready. Pulling llava-phi3:3.8b model... (This may take a while)';
+        curl -X POST http://ollama-server-llava-phi:11434/api/pull -d '{\"name\": \"llava-phi3:3.8b\"}' || true;
+        echo 'Running llava-phi3:4b model with a simple prompt:';
+        curl -X POST http://ollama-server-llava-phi:11434/api/generate -d '{
+          \"model\": \"llava-phi3:3.8b\",
+          \"prompt\": \"For each picture in /app/parking_signs, tell me if I can park there and if so, for how long?\",
           \"stream\": false
         }'
       "
@@ -64,7 +64,7 @@ services:
           echo 'Running moondream:1.8b model with a simple prompt:';
           curl -X POST http://ollama-server-moondream:11434/api/generate -d '{
             \"model\": \"moondream:1.8b\",
-            \"prompt\": \"Why is the sky blue?\",
+            \"prompt\": \"For each picture in /app/parking_signs, tell me if I can park there and if so, for how long?\",
             \"stream\": false
           }'
         "
@@ -98,7 +98,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
+      #- prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -111,4 +111,4 @@ services:
 
 volumes:
   ollama_models:
-  prometheus_data: {}
+  #prometheus_data: {}
