@@ -29,21 +29,7 @@ services:
       - ollama-server-llava-phi
     environment:
       - OLLAMA_HOST=http://ollama-server-llava-phi:11434
-    command: >
-      sh -c "
-        echo 'Waiting for Ollama server to be ready...' &&
-        while ! curl -s http://ollama-server-llava-phi:11434/api/tags > /dev/null; do
-          sleep 5;
-        done;
-        echo 'Ollama server is ready. Pulling llava-phi3:3.8b model... (This may take a while)';
-        curl -X POST http://ollama-server-llava-phi:11434/api/pull -d '{\"name\": \"llava-phi3:3.8b\"}' || true;
-        echo 'Running llava-phi3:4b model with a simple prompt:';
-        curl -X POST http://ollama-server-llava-phi:11434/api/generate -d '{
-          \"model\": \"llava-phi3:3.8b\",
-          \"prompt\": \"For each picture in /app/parking_signs, tell me if I can park there and if so, for how long?\",
-          \"stream\": false
-        }'
-      "
+      - CLIENT_TYPE=llava-phi3:3.8b 
 
   ollama-client-moondream:
       build:
@@ -53,21 +39,7 @@ services:
         - ollama-server-moondream
       environment:
         - OLLAMA_HOST=http://ollama-server-moondream:11434
-      command: >
-        sh -c "
-          echo 'Waiting for Ollama server to be ready...' &&
-          while ! curl -s http://ollama-server-moondream:11434/api/tags > /dev/null; do
-            sleep 5;
-          done;
-          echo 'Ollama server is ready. Pulling moondream:1.8b model... (This may take a while)';
-          curl -X POST http://ollama-server-moondream:11434/api/pull -d '{\"name\": \"moondream:1.8b\"}' || true;
-          echo 'Running moondream:1.8b model with a simple prompt:';
-          curl -X POST http://ollama-server-moondream:11434/api/generate -d '{
-            \"model\": \"moondream:1.8b\",
-            \"prompt\": \"For each picture in /app/parking_signs, tell me if I can park there and if so, for how long?\",
-            \"stream\": false
-          }'
-        "
+        - CLIENT_TYPE=moondream:1.8b
 
   node-exporter:
     image: prom/node-exporter:latest

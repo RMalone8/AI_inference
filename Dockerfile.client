@@ -1,3 +1,17 @@
-FROM docker.io/library/ubuntu:latest
+FROM ollama/ollama:latest
 RUN apt-get update && apt-get install -y curl
 COPY parking_signs /app/parking_signs
+RUN curl https://cataas.com/cat -o /tmp/cat.jpg
+ENTRYPOINT ["sh", "-c", \
+    "echo 'Waiting for Ollama server to be ready...'; \
+     while ! ollama list > /dev/null 2>&1; do \
+       sleep 5; \
+     done; \
+     echo 'Ollama server is ready.'; \
+     if [ -n \"$CLIENT_TYPE\" ]; then \
+       echo \"Running Ollama with model: $CLIENT_TYPE\"; \
+       ollama run \"$CLIENT_TYPE\" 'It is 2 pm on a Thursday. Can I park at /app/parking_signs/sign1.jpg?'; \
+     else \
+       echo 'CLIENT_TYPE not set.'; \
+     fi" \
+]
