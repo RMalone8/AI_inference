@@ -1,0 +1,49 @@
+services:
+  ollama-server:
+    image: ollama/ollama:latest
+    container_name: ollama-server
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+
+  ollama-stats:
+    image: quay.io/navidys/prometheus-podman-exporter
+    depends_on:
+      - ollama-server
+    container_name: ollama-stats
+    environment:
+      - CONTAINER_HOST=unix:///tmp/podman.sock
+    userns_mode: "keep-id:uid=65534"
+    security_opt:
+      - "label=disable"
+    volumes:
+      - /run/user/1001/podman/podman.sock:/tmp/podman.sock
+    ports:
+      - "8000:9882"
+
+  ollama-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    depends_on:
+      - ollama-server
+    container_name: ollama-client
+    environment:
+      - OLLAMA_HOST=http://ollama-server:11434
+      - CLIENT_TYPE=${MODEL_NAME}
+
+  prometheus:
+    build:
+      context: .
+      dockerfile: Dockerfile.prom
+    container_name: prometheus
+    restart: unless-stopped
+      #- ./prometheus.yml:/etc/prometheus/prometheus.yml
+      #- prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+volumes:
+  ollama_models:
+  #prometheus_data: {}

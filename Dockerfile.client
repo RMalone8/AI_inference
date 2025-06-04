@@ -10,7 +10,7 @@ ENTRYPOINT ["sh", "-c", \
      echo 'Ollama server is ready.'; \
      if [ -n \"$CLIENT_TYPE\" ]; then \
        echo \"Running Ollama with model: $CLIENT_TYPE\"; \
-       ollama run \"$CLIENT_TYPE\" 'It is 2 pm on a Thursday. Can I park at /app/parking_signs/sign1.jpg?'; \
+       ollama run \"$CLIENT_TYPE\" 'What breed of cat is in /tmp/cat.jpg'; \
      else \
        echo 'CLIENT_TYPE not set.'; \
      fi" \

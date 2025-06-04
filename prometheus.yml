@@ -2,21 +2,13 @@ global:
   scrape_interval: 1s
 
 scrape_configs:
-  - job_name: 'prometheus'
-    scrape_interval: 1m
-    static_configs:
-      - targets: ['localhost:9090']
-
   - job_name: 'node'
     static_configs:
-      - targets: ['node-exporter:9100']
+      - targets: ['host.containers.internal:9100']
   
   - job_name: ollama
     static_configs:
-      - targets: ['ollama-stats:8000']
+      - targets: ['ollama-stats:9882']
 
 remote_write:
-  - url: 'http://rmalone.grafana.net'
-    basic_auth:
-      username: 'rmalone'
-      password: '<Your Grafana Cloud Access Policy Token>'
+  - url: 'http://host.containers.internal:9091/api/v1/write'

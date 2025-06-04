@@ -1,7 +1,7 @@
 import podman
 import argparse
 
-podman_client = podman.PodmanClient(base_url="unix:///tmp/podman.sock")
+podman_client = podman.PodmanClient(base_url="unix:///run/user/1001/podman/podman.sock")
 
 containers = podman_client.containers.list()
 
