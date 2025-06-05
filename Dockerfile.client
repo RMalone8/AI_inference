@@ -1,17 +1,6 @@
 FROM ollama/ollama:latest
 RUN apt-get update && apt-get install -y curl
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 COPY parking_signs /app/parking_signs
-RUN curl https://cataas.com/cat -o /tmp/cat.jpg
-ENTRYPOINT ["sh", "-c", \
-    "echo 'Waiting for Ollama server to be ready...'; \
-     while ! ollama list > /dev/null 2>&1; do \
-       sleep 5; \
-     done; \
-     echo 'Ollama server is ready.'; \
-     if [ -n \"$CLIENT_TYPE\" ]; then \
-       echo \"Running Ollama with model: $CLIENT_TYPE\"; \
-       ollama run \"$CLIENT_TYPE\" 'What breed of cat is in /tmp/cat.jpg'; \
-     else \
-       echo 'CLIENT_TYPE not set.'; \
-     fi" \
-]
+COPY client.py /app/client.py
+ENTRYPOINT ["sh", "-c", "uv run /app/client.py"]

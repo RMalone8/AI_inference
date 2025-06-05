@@ -1,7 +1,7 @@
 services:
   ollama-server:
     image: ollama/ollama:latest
-    container_name: ollama-server
+    container_name: ollama-server-${MODEL_NAME}
     volumes:
       - ollama_models:/root/.ollama
     restart: unless-stopped
@@ -27,10 +27,10 @@ services:
       dockerfile: Dockerfile.client
     depends_on:
       - ollama-server
-    container_name: ollama-client
+    container_name: ollama-client-${MODEL_NAME}
     environment:
-      - OLLAMA_HOST=http://ollama-server:11434
-      - CLIENT_TYPE=${MODEL_NAME}
+      - OLLAMA_HOST=http://ollama-server-${MODEL_NAME}:11434
+      - CLIENT_TYPE=${MODEL_SPECS}
 
   prometheus:
     build:
