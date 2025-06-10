@@ -1,6 +1,6 @@
 services:
   ollama-server:
-    image: ollama/ollama:latest
+    image: ${OLLAMA_IMAGE}
     container_name: ollama-server-${MODEL_NAME}
     volumes:
       - ollama_models:/root/.ollama

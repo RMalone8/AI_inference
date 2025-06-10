@@ -9,6 +9,7 @@ do
 
     MODEL_NAME="${MODEL_PAIR%%:*}"
     MODEL_SPECS="${MODEL_PAIR#*:}"
+    export OLLAMA_IMAGE="docker.io/dustynv/ollama:0.6.8-r36.4-cu126-22.04"
 
     export MODEL_NAME
     export MODEL_SPECS
