@@ -5,9 +5,7 @@
 # ]
 # ///
 
-
-from langchain_openai import ChatOpenAI
-
+#from langchain_openai import ChatOpenAI
 
 #from langchain_core.messages import HumanMessage, SystemMessage
 
@@ -20,7 +18,7 @@ import subprocess
 import os
 import time
 
-ITER_NO = 10
+ITER_NO = 20
 
 def main():
     model_name = os.environ.get("CLIENT_TYPE", "Cannot Find Model Name")
