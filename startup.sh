@@ -13,8 +13,8 @@ do
 
     export MODEL_NAME
     export MODEL_SPECS
-    podman --connection armchair compose -f remote_compose.yaml up --build --abort-on-container-exit
-    podman --connection armchair compose -f remote_compose.yaml down
+    podman compose -f remote_compose.yaml up --build --abort-on-container-exit
+    podman compose -f remote_compose.yaml down
 
     sleep 10
 

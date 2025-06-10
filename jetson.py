@@ -52,7 +52,9 @@ with env() as dut:
         ssh.sudo("systemctl enable --now podman.socket")
         ssh.sudo("chmod -R 0777 /run/podman")
         # ssh.shell()
-
-    with TcpPortforwardAdapter(client=dut.ssh) as addr:
-        os.environ["CONTAINER_HOST"] = f"ssh://{USERNAME}:{PASSWORD}@{addr[0]}:{addr[1]}/run/podman/podman.sock"
-        run("podman images")
+        ssh.forward_local(9090, 9091, local_host="0.0.0.0")
+        with TcpPortforwardAdapter(client=dut.ssh) as addr:
+            os.environ["CONTAINER_HOST"] = f"ssh://{USERNAME}@{addr[0]}:{addr[1]}/run/podman/podman.sock"
+            os.environ["CONTAINER_SSHKEY"] = "/Users/rmalone/.ssh/id_ed25519"
+            run("podman images")
+            run("./startup.sh")

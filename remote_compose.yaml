@@ -3,7 +3,9 @@ services:
     image: ${OLLAMA_IMAGE}
     container_name: ollama-server-${MODEL_NAME}
     volumes:
-      - ollama_models:/root/.ollama
+      - ollama:/data/models/ollama
+    devices:
+      - "nvidia.com/gpu=all"
     restart: unless-stopped
 
   ollama-stats:
@@ -44,6 +46,6 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
 
-volumes:
-  ollama_models:
+# volumes:
+  #ollama_models:
   #prometheus_data: {}
