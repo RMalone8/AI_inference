@@ -309,7 +309,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "jumpstarter-all", specifier = ">=0.7.0.dev0" },
-    { name = "podman", specifier = ">=5.4.0.1" },
+    { name = "podman", specifier = "==4.9.0" },
     { name = "prometheus-client", specifier = ">=0.22.0" },
 ]
 
@@ -1459,15 +1459,16 @@ wheels = [
 
 [[package]]
 name = "podman"
-version = "5.4.0.1"
+version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "pyxdg" },
     { name = "requests" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fa/5c/ff701e438360a526a728eae3c18ee439c0875e4b937947f1cd04497ae17e/podman-5.4.0.1.tar.gz", hash = "sha256:ee537aaa44ba530fad7cd939d886a7632f9f7018064e7831e8cb614c54cb1789", size = 68926, upload-time = "2025-02-19T16:59:52.064Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/04/1e/c61f591c5aa7eaf419b6351937244bfc7ed93cbbc19c6d8249153e590526/podman-4.9.0.tar.gz", hash = "sha256:48683485a5bbcb3f6b2e9e93aa8647faadc5c27918f8b86e04bff1d0822691af", size = 77635, upload-time = "2024-01-22T16:47:50.102Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8e/38/6d4416f3ec8dc18149847bbb31cc54af20de063844029b00fb0c0d4c533c/podman-5.4.0.1-py3-none-any.whl", hash = "sha256:abd32e49a66bf18a680d9a0ac3989a3f4a3cc7293bc2a5060653276d8ee712f4", size = 84516, upload-time = "2025-02-19T16:59:50.326Z" },
+    { url = "https://files.pythonhosted.org/packages/30/f8/15a3056c7c87e76106b82f20f309c78e6dd5c882619fe73ebab5bf2fbf92/podman-4.9.0-py3-none-any.whl", hash = "sha256:0613314edb8f51b791e2818438e4b386da3937ae73cf0187b27a1f8bb096ac64", size = 93661, upload-time = "2024-01-22T16:47:47.938Z" },
 ]
 
 [[package]]
@@ -1860,6 +1861,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/d5/62/f05dd191232ae94e0b48509bb0ee65c9d45abf5e8f3612b09fd309b41384/pywavelets-1.8.0-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:06786201a91b5e74540f4f3c115c49a29190de2eb424823abbd3a1fd75ea3e28", size = 4472192, upload-time = "2024-12-04T19:54:12.754Z" },
     { url = "https://files.pythonhosted.org/packages/20/6a/257c95ad1e0fd395cbccd4ffec0d01cc9b51a3bb91e67d8fa10ffebc9c72/pywavelets-1.8.0-cp313-cp313t-win32.whl", hash = "sha256:f2877fb7b58c94211257dcf364b204d6ed259146fc87d5a90bf9d93c97af6226", size = 4183968, upload-time = "2024-12-04T19:54:15.099Z" },
     { url = "https://files.pythonhosted.org/packages/6c/58/7179fd6f87153f2e339171e8cfe9bf901398a89045eefd7a3911bb9b47ad/pywavelets-1.8.0-cp313-cp313t-win_amd64.whl", hash = "sha256:ec5d723c3335ff8aa630fd4b14097077f12cc02893c91cafd60dd7b1730e780f", size = 4265431, upload-time = "2024-12-04T19:54:16.928Z" },
+]
+
+[[package]]
+name = "pyxdg"
+version = "0.28"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b0/25/7998cd2dec731acbd438fbf91bc619603fc5188de0a9a17699a781840452/pyxdg-0.28.tar.gz", hash = "sha256:3267bb3074e934df202af2ee0868575484108581e6f3cb006af1da35395e88b4", size = 77776, upload-time = "2022-06-05T11:35:01Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e5/8d/cf41b66a8110670e3ad03dab9b759704eeed07fa96e90fdc0357b2ba70e2/pyxdg-0.28-py2.py3-none-any.whl", hash = "sha256:bdaf595999a0178ecea4052b7f4195569c1ff4d344567bccdc12dfdf02d545ab", size = 49520, upload-time = "2022-06-05T11:34:58.832Z" },
 ]
 
 [[package]]
