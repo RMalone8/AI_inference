@@ -6,6 +6,8 @@ services:
       - ollama:/data/models/ollama
     devices:
       - "nvidia.com/gpu=all"
+    tty: true
+    stdin_open: true
     restart: unless-stopped
 
   ollama-stats:
@@ -19,7 +21,7 @@ services:
     security_opt:
       - "label=disable"
     volumes:
-      - /run/user/1001/podman/podman.sock:/tmp/podman.sock
+      - /run/podman/podman.sock:/tmp/podman.sock
     ports:
       - "8000:9882"
 
@@ -46,6 +48,8 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
 
-# volumes:
+volumes:
+  ollama:
+    external: true
   #ollama_models:
   #prometheus_data: {}
