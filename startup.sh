@@ -2,9 +2,9 @@
 
 set -e
 
-podman --connection podman-machine-default compose -f local_compose.yaml up --build --detach
+podman --connection podman-machine-default compose -f local_config/local_compose.yaml up --build --detach
 
-for MODEL_PAIR in "moondream:moondream:1.8b" "llava:llava-phi3:3.8b"
+for MODEL_PAIR in "llava:llava-phi3:3.8b" "moondream:moondream:1.8b" 
 do
 
     MODEL_NAME="${MODEL_PAIR%%:*}"
@@ -12,8 +12,8 @@ do
 
     export MODEL_NAME
     export MODEL_SPECS
-    podman --connection armchair compose -f remote_compose.yaml up --build --abort-on-container-exit
-    podman --connection armchair compose -f remote_compose.yaml down
+    podman --connection armchair compose -f remote_config/remote_compose.yaml up --build --abort-on-container-exit
+    podman --connection armchair compose -f remote_config/remote_compose.yaml down
 
     sleep 10
 
