@@ -35,7 +35,7 @@ services:
   prometheus:
     build:
       context: .
-      dockerfile: Dockerfile.prom
+      dockerfile: Dockerfile.promremote
     container_name: prometheus
     restart: unless-stopped
       #- ./prometheus.yml:/etc/prometheus/prometheus.yml
