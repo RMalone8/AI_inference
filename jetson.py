@@ -5,13 +5,14 @@ from jumpstarter_driver_network.adapters import FabricAdapter, TcpPortforwardAda
 
 from jumpstarter.utils.env import env
 
+from fabric import Config
 from invoke import run
 import podman
 
 HOSTNAME = "localhost"
 USERNAME = "admin"
 PASSWORD = "passwd"
-POWERCYCLE = False
+POWERCYCLE = False # set this to true when you first get the lease
 
 # init jumpstarter client from env (jmp shell)
 with env() as dut:
@@ -42,17 +43,18 @@ with env() as dut:
     with FabricAdapter(
         client=dut.ssh,
         user=USERNAME,
+        config=Config(overrides={'sudo': {'password': PASSWORD}}),
         connect_kwargs={
             "password": PASSWORD,
         },
     ) as ssh:
         # run command over ssh
-        # ssh.sudo("systemctl enable --now podman.socket")
-        # ssh.sudo("chmod -R 0777 /run/podman")
+        #ssh.sudo("systemctl enable --now podman.socket")
+        ssh.sudo("chmod -R 0777 /run/podman")
         # ssh.shell()
-        ssh.forward_local(9090, 9091, local_host="0.0.0.0")
+        ssh.forward_remote(9090, 9090, remote_host="0.0.0.0")
         with TcpPortforwardAdapter(client=dut.ssh) as addr:
-            os.environ["CONTAINER_HOST"] = f"ssh://{USERNAME}@{addr[0]}:{addr[1]}/run/podman/podman.sock"
+            os.environ["CONTAINER_HOST"] = f"ssh://root@{addr[0]}:{addr[1]}/run/podman/podman.sock"
             os.environ["CONTAINER_SSHKEY"] = "/Users/rmalone/.ssh/id_ed25519"
             run("podman images")
             run("./startup.sh")
