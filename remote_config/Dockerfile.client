@@ -1,4 +1,4 @@
 FROM ollama/ollama:latest
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.7.9 /uv /uvx /bin/
 COPY client.py /app/client.py
 ENTRYPOINT ["/bin/sh", "-c", "/bin/uv run /app/client.py"]
