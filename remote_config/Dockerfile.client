@@ -1,4 +1,6 @@
 FROM ollama/ollama:latest
-COPY --from=ghcr.io/astral-sh/uv:0.7.9 /uv /uvx /bin/
+RUN apt-get update && apt-get install -y curl libsixel-bin
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+COPY parking_signs /app/parking_signs
 COPY client.py /app/client.py
-ENTRYPOINT ["/bin/sh", "-c", "/bin/uv run /app/client.py"]
+ENTRYPOINT ["sh", "-c", "uv run /app/client.py"]
