@@ -4,7 +4,7 @@ set -e
 
 podman --connection podman-machine-default compose -f local_compose.yaml up --build --detach
 
-for MODEL_PAIR in "moondream:moondream:1.8b" "llava:llava-phi3:3.8b"
+for MODEL_PAIR in "gemma3_4b:gemma3:4b" "gemma3_12b:gemma3:12b"
 do
 
     MODEL_NAME="${MODEL_PAIR%%:*}"
@@ -13,8 +13,8 @@ do
 
     export MODEL_NAME
     export MODEL_SPECS
-    podman compose -f remote_compose.yaml up --build --abort-on-container-exit
-    podman compose -f remote_compose.yaml down
+    podman-compose --no-ansi -f remote_compose.yaml up   --no-color --build --abort-on-container-exit
+    podman-compose --no-ansi -f remote_compose.yaml down --no-color
 
     sleep 10
 
