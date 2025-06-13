@@ -13,8 +13,8 @@ do
 
     export MODEL_NAME
     export MODEL_SPECS
-    podman-compose --no-ansi -f remote_compose.yaml up   --no-color --build --abort-on-container-exit
-    podman-compose --no-ansi -f remote_compose.yaml down --no-color
+    podman-compose -f remote_compose.yaml up   --build --abort-on-container-exit
+    podman-compose -f remote_compose.yaml down
 
     sleep 10
 
