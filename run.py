@@ -1,7 +1,5 @@
 import click
-
 from invoke import run
-
 import os
 
 @click.command()
