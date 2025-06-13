@@ -13,6 +13,7 @@ do
 
     export MODEL_NAME
     export MODEL_SPECS
+
     podman kill -a
     podman rm -a
     podman-compose -f remote_config/remote_compose.yaml up --build --abort-on-container-exit

@@ -3,12 +3,13 @@ services:
     image: ollama/ollama:latest
     container_name: ollama-server-${MODEL_NAME}
     volumes:
+      - ${SERV_VOL}
       #- ollama_models:/root/.ollama
-      - ollama:/data/models/ollama
-    devices:
-      - "nvidia.com/gpu=all"
-    tty: true
-    stdin_open: true
+      #- ollama:/data/models/ollama
+    #devices:
+    #  - "nvidia.com/gpu=all"
+    #tty: true
+    #stdin_open: true
     restart: unless-stopped
 
   ollama-stats:
@@ -18,12 +19,13 @@ services:
     container_name: ollama-stats
     environment:
       - CONTAINER_HOST=unix:///tmp/podman.sock
-    #userns_mode: "keep-id:uid=65534"
+    #userns_mode: "keep-id:uid=65534" # -> comment this out to use the jetson machine
     security_opt:
       - "label=disable"
     volumes:
+      - ${HOST_SOCK}:/tmp/podman.sock
       #- /run/user/1001/podman/podman.sock:/tmp/podman.sock
-      - /run/podman/podman.sock:/tmp/podman.sock
+      #- /run/podman/podman.sock:/tmp/podman.sock
     ports:
       - "8000:9882"
 
@@ -55,3 +57,6 @@ volumes:
     external: true
   #ollama_models:
   #prometheus_data: {}
+
+
+# for the volumes, when using armchair use ollama_models. When using the jetson use ollama

@@ -77,7 +77,7 @@ def main():
 
     for _ in range(ITER_NO):
         subprocess.run(["curl", "https://cataas.com/cat", "-o", "/tmp/cat.jpg"])
-        subprocess.run(["img2sixel", "/tmp/cat.jpg"])
+        #subprocess.run(["img2sixel", "/tmp/cat.jpg"])
         subprocess.run(prompt)
 
 if __name__ == "__main__":
