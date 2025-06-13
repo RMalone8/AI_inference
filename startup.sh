@@ -2,7 +2,7 @@
 
 set -e
 
-podman --connection podman-machine-default compose -f local_compose.yaml up --build --detach
+podman --connection podman-machine-default compose -f local_config/local_compose.yaml up --build --detach
 
 for MODEL_PAIR in "gemma3_4b:gemma3:4b" "gemma3_12b:gemma3:12b"
 do
@@ -13,8 +13,10 @@ do
 
     export MODEL_NAME
     export MODEL_SPECS
-    podman-compose -f remote_compose.yaml up   --build --abort-on-container-exit
-    podman-compose -f remote_compose.yaml down
+    podman kill -a
+    podman rm -a
+    podman-compose -f remote_config/remote_compose.yaml up --build --abort-on-container-exit
+    podman-compose -f remote_config/remote_compose.yaml down
 
     sleep 10
 
