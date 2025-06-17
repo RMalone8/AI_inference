@@ -30,7 +30,7 @@ services:
     container_name: ollama-stats
     environment:
       - CONTAINER_HOST=unix:///tmp/podman.sock
-    #userns_mode: "keep-id:uid=65534" # -> comment this out to use the jetson machine
+    userns_mode: "keep-id:uid=65534" # -> comment this out to use the jetson machine
     security_opt:
       - "label=disable"
     volumes:
@@ -44,17 +44,32 @@ services:
     image: docker.io/prom/node-exporter:latest
     container_name: node-exporter
     restart: unless-stopped
+    network_mode: host
+    pid: host
     volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
+      - /:/host:ro,rslave # jetson
     command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--path.rootfs=/host' # jetson
+      - '--no-collector.thermal_zone'
     ports:
       - "9100:9100"
+
+  # jetson_stats_node_exporter:
+  #   build:
+  #     context: jetson_stats_node_exporter/.
+  #     dockerfile: Dockerfile
+  #   container_name: jetson_stats_node_exporter
+  #   restart: always
+  #   ports:
+  #     - "9100:9100"  # Map internal port 9100 to a different external port 9100
+  #   volumes:
+  #     - /run/jtop.sock:/run/jtop.sock
+  #   healthcheck:
+  #     test: ["CMD", "curl", "--fail", "http://localhost:9100/metrics"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 10
+  #     start_period: 60s
 
   prometheus:
     build:
@@ -69,10 +84,11 @@ services:
       - '--storage.tsdb.path=/prometheus'
 
 volumes:
-  ollama:
-    external: true
-  #ollama_models:
+  #ollama:
+  #  external: true
+  ollama_models:
   #prometheus_data: {}
 
-
+x-podman:
+  in_pod: false
 # for the volumes, when using armchair use ollama_models. When using the jetson use ollama

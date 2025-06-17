@@ -32,6 +32,9 @@ SYSTEM = SystemMessage(
 )
 
 def main1():
+
+    print("HELLLLOOOOO")
+
     model_name = os.environ.get("CLIENT_TYPE", "Cannot Find Model Name")
     host = os.environ.get("OLLAMA_HOST", "Cannot Find Host")
 
@@ -68,6 +71,9 @@ def main1():
         )
 
 def main():
+
+    print("HELLLLOOOOO")
+
     model_name = os.environ.get("CLIENT_TYPE", "Cannot Find Model Name")
 
     while subprocess.run(["ollama", "list"], capture_output=True).returncode != 0:
