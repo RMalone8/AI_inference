@@ -6,8 +6,8 @@ services:
       - ${SERV_VOL}
       #- ollama_models:/root/.ollama
       #- ollama:/data/models/ollama
-    #devices:
-    #  - "nvidia.com/gpu=all"
+    devices:
+      - "nvidia.com/gpu=all"
     tty: true  # required for jetson ollama base image, since it's using bash as its entrypoint without an open stdin bash would exit
     stdin_open: true  # required for jetson ollama base image
     restart: unless-stopped

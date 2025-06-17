@@ -6,8 +6,8 @@ services:
       - ${SERV_VOL}
       #- ollama_models:/root/.ollama
       #- ollama:/data/models/ollama
-    #devices:
-    #  - "nvidia.com/gpu=all"
+    devices:
+      - "nvidia.com/gpu=all"
     tty: true  # required for jetson ollama base image, since it's using bash as its entrypoint without an open stdin bash would exit
     stdin_open: true  # required for jetson ollama base image
     restart: unless-stopped
@@ -30,8 +30,6 @@ services:
     container_name: ollama-stats
     environment:
       - CONTAINER_HOST=unix:///tmp/podman.sock
-
-    userns_mode: "keep-id:uid=65534" # -> comment this out to use the jetson machine
  
     security_opt:
       - "label=disable"
@@ -54,6 +52,16 @@ services:
       - '--path.rootfs=/host' # jetson
       - '--no-collector.thermal_zone'
 
+# jetson exporter
+  jetson_stats_node_exporter:
+    build:
+      context: jetson_stats_node_exporter/.
+      dockerfile: Dockerfile
+    container_name: jetson_stats_node_exporter
+    restart: unless-stopped
+    volumes:
+      - "/run:/run"
+
   prometheus:
     build:
       context: .
@@ -68,7 +76,8 @@ services:
 
 volumes:
 
-  ollama_models:
+  ollama:
+    external: true
 
   #prometheus_data: {}
 
