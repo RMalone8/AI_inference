@@ -30,9 +30,9 @@ services:
     container_name: ollama-stats
     environment:
       - CONTAINER_HOST=unix:///tmp/podman.sock
-
+{% if machine == 'armchair' %}
     userns_mode: "keep-id:uid=65534" # -> comment this out to use the jetson machine
- 
+{% endif %} 
     security_opt:
       - "label=disable"
     volumes:
@@ -53,7 +53,17 @@ services:
     command:
       - '--path.rootfs=/host' # jetson
       - '--no-collector.thermal_zone'
-
+{% if machine == 'jetson' %}
+# jetson exporter
+  jetson_stats_node_exporter:
+    build:
+      context: jetson_stats_node_exporter/.
+      dockerfile: Dockerfile
+    container_name: jetson_stats_node_exporter
+    restart: unless-stopped
+    volumes:
+      - "/run:/run"
+{% endif %}
   prometheus:
     build:
       context: .
@@ -67,9 +77,12 @@ services:
       - '--storage.tsdb.path=/prometheus'
 
 volumes:
-
+{% if machine == 'jetson'%}
+  ollama:
+    external: true
+{% elif machine == 'armchair' %}
   ollama_models:
-
+{% endif %}
   #prometheus_data: {}
 
 x-podman:
