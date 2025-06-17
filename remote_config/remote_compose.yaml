@@ -1,6 +1,6 @@
 services:
   ollama-server:
-    image: ollama/ollama:latest
+    image: ${OLLAMA_IMAGE}
     container_name: ollama-server-${MODEL_NAME}
     volumes:
       - ${SERV_VOL}
@@ -30,7 +30,7 @@ services:
     container_name: ollama-stats
     environment:
       - CONTAINER_HOST=unix:///tmp/podman.sock
-    userns_mode: "keep-id:uid=65534" # -> comment this out to use the jetson machine
+    #userns_mode: "keep-id:uid=65534" # -> comment this out to use the jetson machine
     security_opt:
       - "label=disable"
     volumes:
@@ -51,25 +51,32 @@ services:
     command:
       - '--path.rootfs=/host' # jetson
       - '--no-collector.thermal_zone'
-    ports:
-      - "9100:9100"
 
-  # jetson_stats_node_exporter:
-  #   build:
-  #     context: jetson_stats_node_exporter/.
-  #     dockerfile: Dockerfile
-  #   container_name: jetson_stats_node_exporter
-  #   restart: always
-  #   ports:
-  #     - "9100:9100"  # Map internal port 9100 to a different external port 9100
-  #   volumes:
-  #     - /run/jtop.sock:/run/jtop.sock
-  #   healthcheck:
-  #     test: ["CMD", "curl", "--fail", "http://localhost:9100/metrics"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 10
-  #     start_period: 60s
+  jetson_stats_node_exporter:
+    build:
+      context: jetson_stats_node_exporter/.
+      dockerfile: Dockerfile
+    container_name: jetson_stats_node_exporter
+    restart: unless-stopped
+    volumes:
+      - "jtop:/run"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:9100/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+
+  jetson_stats:
+    build:
+      context: .
+      dockerfile: Dockerfile.jtop
+    container_name: jetson_stats
+    environment:
+      - JTOP_SERVICE=True
+    volumes:
+      - "/sys:/sys"
+      - "jtop:/run"
 
   prometheus:
     build:
@@ -84,10 +91,11 @@ services:
       - '--storage.tsdb.path=/prometheus'
 
 volumes:
-  #ollama:
-  #  external: true
-  ollama_models:
+  ollama:
+    external: true
+  #ollama_models:
   #prometheus_data: {}
+  jtop:
 
 x-podman:
   in_pod: false
