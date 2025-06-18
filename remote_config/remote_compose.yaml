@@ -22,6 +22,7 @@ services:
     environment:
       - OLLAMA_HOST=http://ollama-server-${MODEL_NAME}:11434
       - CLIENT_TYPE=${MODEL_SPECS}
+    tty: true
 
   ollama-stats:
     image: quay.io/navidys/prometheus-podman-exporter
@@ -62,6 +63,19 @@ services:
     volumes:
       - "/run:/run"
 
+  jetson_stats:
+    build:
+      context: jetson_stats_node_exporter/.
+      dockerfile: Dockerfile.ubi
+    container_name: jetson_stats
+    restart: unless-stopped
+    volumes:
+      - "/run:/run"
+      - "/etc/fstab:/etc/fstab:ro"
+      - "/sys:/sys"
+    pid: host
+    privileged: true
+
   prometheus:
     build:
       context: .
@@ -73,6 +87,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
+      #- '--log.level=error'
 
 volumes:
 
