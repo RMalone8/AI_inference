@@ -1,2 +1,2 @@
 FROM prom/prometheus:latest
-COPY prometheus_local.yml /etc/prometheus/prometheus.yml
+COPY local_prom_config.yml /etc/prometheus/prometheus.yml

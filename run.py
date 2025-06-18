@@ -10,7 +10,8 @@ def main(machine):
 
     config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/remote_config"
     env = Environment(loader=FileSystemLoader(config_dir))
-    template = env.get_template("remote_compose.j2")
+    template_compose = env.get_template("remote_compose.j2")
+    template_prom = env.get_template("remote_prom_config.j2")
 
     if machine == "armchair":
         ollama_image = "docker.io/ollama/ollama:latest"
@@ -27,7 +28,8 @@ def main(machine):
     else:
         command = "echo 'No machine chosen'"
 
-    rendered_compose = template.render({"machine":machine})
+    rendered_compose = template_compose.render({"machine":machine})
+    rendered_prom = template_prom.render({"machine":machine})
 
     os.environ["OLLAMA_IMAGE"] = ollama_image
     os.environ["SERV_VOL"] = server_vol
@@ -35,6 +37,8 @@ def main(machine):
 
     with open("remote_config/remote_compose.yaml", "w") as f:
         f.write(rendered_compose)
+    with open("remote_config/remote_prom_config.yml", "w") as f:
+        f.write(rendered_prom)
 
     run(command)
 

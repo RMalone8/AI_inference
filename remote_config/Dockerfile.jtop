@@ -1,2 +1,0 @@
-FROM rbonghi/jetson_stats:latest
-RUN addgroup jtop

@@ -59,7 +59,7 @@ services:
   jetson_stats_node_exporter:
     build:
       context: jetson_stats_node_exporter/.
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.jsnode
     container_name: jetson_stats_node_exporter
     restart: unless-stopped
     volumes:
@@ -68,7 +68,7 @@ services:
   jetson_stats:
     build:
       context: jetson_stats_node_exporter/.
-      dockerfile: Dockerfile.ubi
+      dockerfile: Dockerfile.jstats
     container_name: jetson_stats
     restart: unless-stopped
     volumes:
