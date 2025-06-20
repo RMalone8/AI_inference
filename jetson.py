@@ -12,7 +12,7 @@ import podman
 HOSTNAME = "localhost"
 USERNAME = "admin"
 PASSWORD = "passwd"
-POWERCYCLE = False # set this to true when you first get the lease
+POWERCYCLE = True # set this to true when you first get the lease
 
 # init jumpstarter client from env (jmp shell)
 with env() as dut:

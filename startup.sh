@@ -16,7 +16,7 @@ do
     podman network rm remote_config_default || true
     podman kill -a
     podman rm -a
-    podman-compose -f remote_config/remote_compose.yaml up --build --abort-on-container-exit
+    podman-compose -f remote_config/remote_compose.yaml up --build #--abort-on-container-exit
     podman-compose -f remote_config/remote_compose.yaml down
 
     sleep 10

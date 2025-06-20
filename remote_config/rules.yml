@@ -1,0 +1,12 @@
+groups:
+  - name: power_standardization
+    rules:
+      - record: power_watts
+        expr: integrated_power_mW * 0.001
+        labels:
+          unit: "watts"
+
+      # - record: power_watts
+      #   expr: node_hwmon_power_watt
+      #   labels:
+      #     unit: "watts"
