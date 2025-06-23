@@ -1,0 +1,3 @@
+[submodule "remote_config/jetson_node_exporter"]
+	path = remote_config/jetson_node_exporter
+	url = https://github.com/NickCao/jetson_stats_node_exporter.git
