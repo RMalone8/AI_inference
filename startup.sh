@@ -12,6 +12,7 @@ do
 
     export MODEL_NAME
     export MODEL_SPECS
+    export PYTHONUNBUFFERED=1
 
     podman network rm remote_config_default || true
     podman kill -a

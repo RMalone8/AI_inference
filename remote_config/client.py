@@ -42,9 +42,13 @@ def main():
         openai_api_key="dummy",
     ) # .with_structured_output(Animal)
 
-    for _ in range(ITER_NO):
+    for i in range(ITER_NO):
         r = requests.get('https://cataas.com/cat')
         r.raise_for_status()
+        print(f"ITER: {i}")
+        print(f"{model_name} is asked: ")
+        print("Describe the breed and species of the animal in this image, return as JSON")
+        print("The model returns: ")
         print(
             model.invoke(
                 [
