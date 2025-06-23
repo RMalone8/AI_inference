@@ -13,7 +13,7 @@ scrape_configs:
       - source_labels: [__name__]
         regex: 'node_hwmon_power_watt'
         target_label: __name__
-        replacement: 'consumed power'
+        replacement: 'consumed_power'
 {% endif %}    
 {% if machine == 'jetson' %}
   - job_name: 'jetson-node'
@@ -23,7 +23,7 @@ scrape_configs:
       - source_labels: [__name__]
         regex: 'integrated_power_mW'
         target_label: __name__
-        replacement: 'consumed power'
+        replacement: 'consumed_power_raw_milliwatts'
 {% endif %}
   - job_name: ollama
     static_configs:

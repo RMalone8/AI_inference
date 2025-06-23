@@ -60,16 +60,18 @@ services:
 # jetson exporter
   jetson_stats_node_exporter:
     build:
-      context: jetson_stats_node_exporter/.
+      context: .
       dockerfile: Dockerfile.jsnode
     container_name: jetson_stats_node_exporter
     restart: unless-stopped
+    depends_on:
+      - jetson_stats
     volumes:
       - "/run:/run"
 
   jetson_stats:
     build:
-      context: jetson_stats_node_exporter/.
+      context: .
       dockerfile: Dockerfile.jstats
     container_name: jetson_stats
     restart: unless-stopped
