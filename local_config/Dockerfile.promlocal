@@ -1,2 +1,3 @@
 FROM prom/prometheus:latest
 COPY local_prom_config.yml /etc/prometheus/prometheus.yml
+COPY local_rules.yml /etc/prometheus/local_rules.yml

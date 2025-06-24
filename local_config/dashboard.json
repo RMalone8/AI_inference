@@ -242,7 +242,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "builder",
-          "expr": "{\"consumed power\"}",
+          "expr": "consumed_power",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,

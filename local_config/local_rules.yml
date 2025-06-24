@@ -1,0 +1,9 @@
+groups:
+  - name: jetson_power_conversion
+    interval: 1s
+    rules:
+      - record: consumed_power
+        expr: |
+          consumed_power_raw_milliwatts * 0.001
+        labels:
+          unit: "watts" 

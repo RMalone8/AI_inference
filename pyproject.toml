@@ -11,5 +11,5 @@ dependencies = [
     "prometheus-client>=0.22.0",
 ]
 
-[[tool.uv.index]]
-url = "https://pkg.jumpstarter.dev/main/simple"
+[tool.uv.sources]
+jumpstarter-all = { git = "https://github.com/jumpstarter-dev/jumpstarter", subdirectory = "packages/jumpstarter-all" }

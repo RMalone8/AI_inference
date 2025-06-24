@@ -1,3 +1,9 @@
+global:
+  scrape_interval: 15s
+
+rule_files:
+  - "local_rules.yml"
+
 storage:
   tsdb:
     out_of_order_time_window: 1m
