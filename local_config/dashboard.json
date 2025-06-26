@@ -480,7 +480,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by (name) (\n    podman_container_mem_usage_bytes\n    * on(id, instance, job) group_left(name)\n    podman_container_info{name=~\".*ollama-server.*\"}\n)",
+          "expr": "sum by (name) (\n    podman_container_mem_usage_bytes\n    * on(id, instance, job) group_left(name)\n    podman_container_info{name=~\".*server.*\"}\n)",
           "hide": false,
           "instant": false,
           "legendFormat": "{{name}}",
@@ -613,7 +613,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by (name) (\n    podman_container_mem_usage_bytes\n    * on(id, instance, job) group_left(name)\n    podman_container_info{name=~\".*ollama-server.*\"}\n)",
+          "expr": "sum by (name) (\n    podman_container_mem_usage_bytes\n    * on(id, instance, job) group_left(name)\n    podman_container_info{name=~\".*server.*\"}\n)",
           "hide": false,
           "instant": false,
           "legendFormat": "{{name}}",
@@ -743,7 +743,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "avg_over_time(\n    sum by (name) (\n        rate(podman_container_cpu_seconds_total[10s])\n        * on(id, instance, job) group_left(name)\n            podman_container_info{name=~\"ollama-server.*\"}\n    )[5m:] # This is a subquery: calculate the sum by (name) every 10s, for the last 5 minutes\n) * 100",
+          "expr": "avg_over_time(\n    sum by (name) (\n        rate(podman_container_cpu_seconds_total[10s])\n        * on(id, instance, job) group_left(name)\n            podman_container_info{name=~\".*server.*\"}\n    )[5m:] # This is a subquery: calculate the sum by (name) every 10s, for the last 5 minutes\n) * 100",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -861,7 +861,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum by (name)   (\n    irate(podman_container_cpu_seconds_total[10s])\n    * on(id, instance, job) group_left(name)\n        podman_container_info{name=~\"ollama-server.*\"}\n) * 100",
+          "expr": "sum by (name)   (\n    irate(podman_container_cpu_seconds_total[10s])\n    * on(id, instance, job) group_left(name)\n        podman_container_info{name=~\".*server.*\"}\n) * 100",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -1001,7 +1001,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by (name)   (\n    irate(podman_container_cpu_seconds_total[10s])\n    * on(id, instance, job) group_left(name)\n        podman_container_info{name=~\"ollama-server.*\"}\n) * 100",
+          "expr": "sum by (name)   (\n    irate(podman_container_cpu_seconds_total[10s])\n    * on(id, instance, job) group_left(name)\n        podman_container_info{name=~\".*server.*\"}\n) * 100",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
