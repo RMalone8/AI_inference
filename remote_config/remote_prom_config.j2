@@ -5,8 +5,10 @@ scrape_configs:
   - job_name: 'node'
     static_configs:
       - targets: ['host.containers.internal:9100']
-{% if machine == 'armchair' %}
     metric_relabel_configs:
+      - target_label: machine
+        replacement: '{{ machine }}'
+{% if machine == 'armchair' %}
       - source_labels: [__name__]
         regex: 'node_hwmon_power_watt'
         target_label: __name__
@@ -17,14 +19,19 @@ scrape_configs:
     static_configs:
       - targets: ['jetson_stats_node_exporter:9100']
     metric_relabel_configs:
+      - target_label: machine
+        replacement: '{{ machine }}'
       - source_labels: [__name__]
         regex: 'integrated_power_mW'
         target_label: __name__
         replacement: 'consumed_power_raw_milliwatts'
 {% endif %}
-  - job_name: ollama
+  - job_name: 'container'
     static_configs:
-      - targets: ['ollama-stats:9882']
+      - targets: ['container-stats:9882']
+    metric_relabel_configs:
+      - target_label: machine
+        replacement: '{{ machine }}'
 
 remote_write:
   - url: 'http://host.containers.internal:9090/api/v1/write'

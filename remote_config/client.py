@@ -33,13 +33,35 @@ SYSTEM = SystemMessage(
 
 def main():
     model_name = os.environ.get("CLIENT_TYPE", "Cannot Find Model Name")
-    host = os.environ.get("OLLAMA_HOST", "Cannot Find Host")
+    host = os.environ.get("HOST", "Cannot Find Host")
+    
+    print(f"-CLIENT CONFIGURATION-")
+    print(f"Model Name: {model_name}")
+    print(f"Host: {host}")
+    print(f"API Base: {host}/v1")
+    print("=" * 30)
+
+    # Wait for server to be ready
+    print("Waiting for server to be ready...")
+    max_retries = 30
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(f"{host}/v1/models", timeout=10)
+            if response.status_code == 200:
+                print("Server is ready!")
+                break
+        except requests.exceptions.RequestException as e:
+            print(f"Attempt {attempt + 1}/{max_retries}: Server not ready yet ({e})")
+            time.sleep(10)
+    else:
+        print("Server failed to become ready after maximum retries")
+        return
 
     model = ChatOpenAI(
-        model_name=model_name,
+        model=model_name,
         temperature=0,
-        openai_api_base=f"{host}/v1",
-        openai_api_key="dummy",
+        base_url=f"{host}/v1",
+        api_key="dummy",
     ) # .with_structured_output(Animal)
 
     for i in range(ITER_NO):
@@ -60,10 +82,10 @@ def main():
                                 "text": "Describe the breed and species of the animal in this image, return as JSON",
                             },
                             {
-                                "type": "image",
-                                "source_type": "base64",
-                                "data": base64.b64encode(r.content).decode(),
-                                "mime_type": "image/jpeg",
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{base64.b64encode(r.content).decode()}"
+                                }
                             },
                         ]
                     ),

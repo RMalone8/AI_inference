@@ -1,11 +1,31 @@
 services:
-  ollama-server:
-    image: ${OLLAMA_IMAGE}
-    container_name: ollama-server-${MODEL_NAME}
+  server:
+    image: ${SERVER_IMAGE}
+    container_name: {{runtime}}-server-${MODEL_SPECS}
+{% if runtime == 'ollama' %}
     volumes:
       - ${SERV_VOL}
-      #- ollama_models:/root/.ollama
-      #- ollama:/data/models/ollama
+    ports:
+      - "11434:11434"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+{% endif %}
+{% if runtime == 'vllm' %}
+    volumes:
+      - ${SERV_VOL}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+{% endif %}
 {% if machine == 'jetson' %}
     devices:
       - "nvidia.com/gpu=all"
@@ -13,24 +33,35 @@ services:
     tty: true  # required for jetson ollama base image, since it's using bash as its entrypoint without an open stdin bash would exit
     stdin_open: true  # required for jetson ollama base image
     restart: unless-stopped
+{% if runtime == 'vllm' %}
+    command:
+      - "vllm"
+      - "serve"
+      - "${MODEL_NAME}"
+{% endif %}
 
-  ollama-client:
+  client:
     build:
       context: .
       dockerfile: Dockerfile.client
     depends_on:
-      - ollama-server
-    container_name: ollama-client-${MODEL_NAME}
+      server:
+        condition: service_healthy
+    container_name: {{runtime}}-client-${MODEL_SPECS}
     environment:
-      - OLLAMA_HOST=http://ollama-server-${MODEL_NAME}:11434
-      - CLIENT_TYPE=${MODEL_SPECS}
+{% if runtime == 'ollama' %}
+      - HOST=http://{{runtime}}-server-${MODEL_SPECS}:11434
+{% elif runtime == 'vllm' %}
+      - HOST=http://{{runtime}}-server-${MODEL_SPECS}:8000
+{% endif %}
+      - CLIENT_TYPE=${MODEL_NAME}
     tty: true
 
-  ollama-stats:
+  container-stats:
     image: quay.io/navidys/prometheus-podman-exporter
     depends_on:
-      - ollama-server
-    container_name: ollama-stats
+      - server
+    container_name: container-stats
     environment:
       - CONTAINER_HOST=unix:///tmp/podman.sock
 {% if machine == 'armchair' %}
@@ -40,10 +71,8 @@ services:
       - "label=disable"
     volumes:
       - ${HOST_SOCK}:/tmp/podman.sock
-      #- /run/user/1001/podman/podman.sock:/tmp/podman.sock
-      #- /run/podman/podman.sock:/tmp/podman.sock
     ports:
-      - "8000:9882"
+      - "9882:9882"
 
   node-exporter:
     image: docker.io/prom/node-exporter:latest
@@ -96,14 +125,17 @@ services:
       #- '--log.level=error'
 
 volumes:
-{% if machine == 'jetson'%}
+{% if machine == 'jetson' and runtime == 'ollama' %}
   ollama:
     external: true
-{% elif machine == 'armchair' %}
+{% elif machine == 'jetson' and runtime == 'vllm' %}
+  vllm_cache:
+{% elif machine == 'armchair' and runtime == 'ollama' %}
   ollama_models:
+{% elif machine == 'armchair' and runtime == 'vllm' %}
+  vllm_cache:
 {% endif %}
   #prometheus_data: {}
 
 x-podman:
   in_pod: false
-# for the volumes, when using armchair use ollama_models. When using the jetson use ollama

@@ -1,0 +1,29 @@
+models:
+  granite3:
+    variants:
+      4b:
+        ollama:
+          name: "granite3:4b"
+        vllm:
+          name: "ibm-granite/granite-vision-3.2-2b"
+        display_name: "granite3_4b"
+      12b:
+        ollama:
+          name: "granite3:12b"
+        vllm:
+          name: "ibm-granite/granite-vision-3.3-2b"
+        display_name: "granite3_12b"
+  gemma3:
+    variants:
+      4b:
+        ollama:
+          name: "gemma3:4b"
+        vllm:
+          name: "google/gemma-3-4b-it"
+        display_name: "gemma3_4b"
+      12b:
+        ollama:
+          name: "gemma3:12b"
+        vllm:
+          name: "google/gemma-3-12b-it"
+        display_name: "gemma3_12b"

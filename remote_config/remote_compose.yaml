@@ -1,11 +1,20 @@
 services:
-  ollama-server:
-    image: ${OLLAMA_IMAGE}
-    container_name: ollama-server-${MODEL_NAME}
+  server:
+    image: ${SERVER_IMAGE}
+    container_name: vllm-server-${MODEL_SPECS}
+
+
     volumes:
       - ${SERV_VOL}
-      #- ollama_models:/root/.ollama
-      #- ollama:/data/models/ollama
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
 
     devices:
       - "nvidia.com/gpu=all"
@@ -14,23 +23,32 @@ services:
     stdin_open: true  # required for jetson ollama base image
     restart: unless-stopped
 
-  ollama-client:
+    command:
+      - "vllm"
+      - "serve"
+      - "${MODEL_NAME}"
+
+
+  client:
     build:
       context: .
       dockerfile: Dockerfile.client
     depends_on:
-      - ollama-server
-    container_name: ollama-client-${MODEL_NAME}
+      server:
+        condition: service_healthy
+    container_name: vllm-client-${MODEL_SPECS}
     environment:
-      - OLLAMA_HOST=http://ollama-server-${MODEL_NAME}:11434
-      - CLIENT_TYPE=${MODEL_SPECS}
+
+      - HOST=http://vllm-server-${MODEL_SPECS}:8000
+
+      - CLIENT_TYPE=${MODEL_NAME}
     tty: true
 
-  ollama-stats:
+  container-stats:
     image: quay.io/navidys/prometheus-podman-exporter
     depends_on:
-      - ollama-server
-    container_name: ollama-stats
+      - server
+    container_name: container-stats
     environment:
       - CONTAINER_HOST=unix:///tmp/podman.sock
  
@@ -38,10 +56,8 @@ services:
       - "label=disable"
     volumes:
       - ${HOST_SOCK}:/tmp/podman.sock
-      #- /run/user/1001/podman/podman.sock:/tmp/podman.sock
-      #- /run/podman/podman.sock:/tmp/podman.sock
     ports:
-      - "8000:9882"
+      - "9882:9882"
 
   node-exporter:
     image: docker.io/prom/node-exporter:latest
@@ -95,11 +111,9 @@ services:
 
 volumes:
 
-  ollama:
-    external: true
+  vllm_cache:
 
   #prometheus_data: {}
 
 x-podman:
   in_pod: false
-# for the volumes, when using armchair use ollama_models. When using the jetson use ollama
