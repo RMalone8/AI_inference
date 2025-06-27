@@ -29,7 +29,7 @@
         "iconColor": "super-light-blue",
         "name": "Models Running",
         "target": {
-          "expr": "sum by (name)   (\n    irate(podman_container_cpu_seconds_total[10s])\n    * on(id, instance, job) group_left(name)\n        podman_container_info{name=~\"ollama-server.*\"}\n) * 100 > 0",
+          "expr": "sum by (name)   (\n    irate(podman_container_cpu_seconds_total[10s])\n    * on(id, instance, job) group_left(name)\n        podman_container_info{name=~\".*server.*\"}\n) * 100 > 0",
           "interval": "",
           "refId": "Anno"
         }

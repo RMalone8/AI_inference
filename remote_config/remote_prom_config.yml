@@ -28,5 +28,12 @@ scrape_configs:
       - target_label: machine
         replacement: 'jetson'
 
+  - job_name: 'vllm'
+    static_configs:
+      - targets: ['host.containers.internal:8000']
+    metric_relabel_configs:
+      - target_label: machine
+        replacement: 'jetson'
+
 remote_write:
   - url: 'http://host.containers.internal:9090/api/v1/write'
