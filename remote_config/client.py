@@ -20,7 +20,7 @@ import time
 import requests
 import subprocess
 
-ITER_NO = 20
+ITER_NO = 10
 
 class Animal(BaseModel):
     species: str = Field(description="The species of the animal")

@@ -59,26 +59,26 @@ def load_models(runtime):
     
     model_pairs = []
     for model_key, model_data in models_config['models'].items():
-        for variant_key, variant_data in model_data['variants'].items():
-            if runtime in variant_data:
-                model_name = variant_data[runtime]['name']
-                display_name = variant_data['display_name']
-                model_pairs.append([model_name, display_name])
-    
+        if runtime == "ollama" and model_key == "gemma3" or runtime == "vllm" and model_key == "granite3":
+        # right now, granite3 will only work on vllm because they can be downloaded at runtime and
+        # ollama only supports gemma3 which is already downloaded
+            for variant_key, variant_data in model_data['variants'].items():
+                if runtime in variant_data:
+                    model_name = variant_data[runtime]['name']
+                    display_name = variant_data['display_name']
+                    model_pairs.append([model_name, display_name])
+        
     return model_pairs
 
-def render_templates(machine, runtime):
+def render_templates(machine, runtime, gpu="true"):
     config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/remote_config"
     env = Environment(loader=FileSystemLoader(config_dir))
     
     template_compose = env.get_template("remote_compose.j2")
     template_prom = env.get_template("remote_prom_config.j2")
     
-    rendered_compose = template_compose.render({"machine": machine, "runtime": runtime})
-    rendered_prom = template_prom.render({
-        "machine": machine, 
-        "runtime": runtime,
-    })
+    rendered_compose = template_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu})
+    rendered_prom = template_prom.render({"machine": machine, "runtime": runtime})
     
     with open("remote_config/remote_compose.yaml", "w") as f:
         f.write(rendered_compose)
@@ -89,7 +89,8 @@ def render_templates(machine, runtime):
 @click.option('--machine', help='The machine to deploy the models onto', default="jetson")
 @click.option('--runtime', help='The runtime to serve the models on', default="vllm")
 @click.option('--model', help='What aspect of the stack is varied', default="granite")
-def main(machine, runtime, model):
+@click.option('--extra_args', help='Extra aspects to control for', default=None)
+def main(machine, runtime, model, extra_args):
 
     if runtime != "variable":
         model_pairs = load_models(runtime)
@@ -107,7 +108,11 @@ def main(machine, runtime, model):
             m = "jetson" if i == 0 else "armchair"
             config = get_machine_config(m, runtime)
             setup_environment(machine, model_pairs[0])
-    
+        elif extra_args == "gpu":
+            config = get_machine_config(machine, runtime)
+            setup_environment(machine, model_pairs[0])
+            
+
         os.environ["SERVER_IMAGE"] = config.get("server_image", "")
         os.environ["SERV_VOL"] = config.get("server_vol", "")
         os.environ["HOST_SOCK"] = config.get("host_sock", "")
@@ -118,6 +123,9 @@ def main(machine, runtime, model):
             render_templates(machine, rt)
         if machine == "variable":
             render_templates(m, runtime)
+        if extra_args == "gpu":
+            gpu_used = "yes" if i == 0 else "no"
+            render_templates(machine, runtime, gpu=gpu_used)
 
         run(config["command"])
 

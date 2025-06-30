@@ -26,7 +26,7 @@ services:
       retries: 5
       start_period: 120s
 {% endif %}
-{% if machine == 'jetson' %}
+{% if machine == 'jetson' and gpu == 'yes' %}
     devices:
       - "nvidia.com/gpu=all"
 {% endif %}

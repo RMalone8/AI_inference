@@ -3,13 +3,13 @@ models:
     variants:
       4b:
         ollama:
-          name: "granite3:4b"
+          name: "granite3.2-vision:2b"
         vllm:
           name: "ibm-granite/granite-vision-3.2-2b"
         display_name: "granite3_4b"
       12b:
         ollama:
-          name: "granite3:12b"
+          name: "mrutkows/granite3.2-vision:2b"
         vllm:
           name: "ibm-granite/granite-vision-3.3-2b"
         display_name: "granite3_12b"

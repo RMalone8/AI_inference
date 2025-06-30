@@ -7,3 +7,11 @@ groups:
           consumed_power_raw_milliwatts * 0.001
         labels:
           unit: "watts" 
+  - name: jetson_mem_conversion
+    interval: 1s
+    rules:
+      - record: gpu_mem_used
+        expr: |
+          gpuram_kB / 1024
+        labels:
+          unit: "MB"
