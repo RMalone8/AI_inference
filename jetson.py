@@ -7,12 +7,11 @@ from jumpstarter.utils.env import env
 
 from fabric import Config
 from invoke import run
-import podman
 
 HOSTNAME = "localhost"
 USERNAME = "admin"
 PASSWORD = "passwd"
-POWERCYCLE = True # set this to true when you first get the lease
+POWERCYCLE = False # set this to true when you first get the lease
 
 # init jumpstarter client from env (jmp shell)
 with env() as dut:

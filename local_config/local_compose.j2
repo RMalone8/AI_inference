@@ -21,7 +21,7 @@ services:
       - '--web.enable-remote-write-receiver'
     ports:
       - "9090:9090"
-
+{% if webui %}
   webui:
     image: ghcr.io/open-webui/open-webui:main
     environment:
@@ -35,3 +35,4 @@ services:
 
 volumes:
   open-webui: {}
+{% endif %}

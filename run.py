@@ -70,24 +70,32 @@ def load_models(runtime):
         
     return model_pairs
 
-def render_templates(machine, runtime, gpu="true"):
-    config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/remote_config"
-    env = Environment(loader=FileSystemLoader(config_dir))
+def render_templates(machine, runtime, gpu=True, webui=False):
+    remote_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/remote_config"
+    local_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/local_config"
+
+    remote_env = Environment(loader=FileSystemLoader(remote_config_dir))
+    local_env = Environment(loader=FileSystemLoader(local_config_dir))
+
     
-    template_compose = env.get_template("remote_compose.j2")
-    template_prom = env.get_template("remote_prom_config.j2")
+    template_remote_compose = remote_env.get_template("remote_compose.j2")
+    template_remote_prom = remote_env.get_template("remote_prom_config.j2")
+    template_local_compose = local_env.get_template("local_compose.j2")
     
-    rendered_compose = template_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu})
-    rendered_prom = template_prom.render({"machine": machine, "runtime": runtime})
-    
-    with open("remote_config/remote_compose.yaml", "w") as f:
-        f.write(rendered_compose)
-    with open("remote_config/remote_prom_config.yml", "w") as f:
-        f.write(rendered_prom)
+    rendered_remote_compose = template_remote_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu, "webui": webui})
+    rendered_remote_prom = template_remote_prom.render({"machine": machine, "runtime": runtime})
+    rendered_local_compose = template_local_compose.render({"webui": webui})
+
+    with open(f"{remote_config_dir}/remote_compose.yaml", "w") as f:
+        f.write(rendered_remote_compose)
+    with open(f"{remote_config_dir}/remote_prom_config.yml", "w") as f:
+        f.write(rendered_remote_prom)
+    with open(f"{local_config_dir}/local_compose.yaml", "w") as f:
+        f.write(rendered_local_compose)
 
 @click.command()
 @click.option('--machine', help='The machine to deploy the models onto', default="jetson")
-@click.option('--runtime', help='The runtime to serve the models on', default="vllm")
+@click.option('--runtime', help='The runtime to serve the models on', default="ollama")
 @click.option('--model', help='What aspect of the stack is varied', default="granite")
 @click.option('--extra_args', help='Extra aspects to control for', default=None)
 def main(machine, runtime, model, extra_args):
@@ -111,24 +119,32 @@ def main(machine, runtime, model, extra_args):
         elif extra_args == "gpu":
             config = get_machine_config(machine, runtime)
             setup_environment(machine, model_pairs[0])
-            
+        elif extra_args == "webui":  
+            config = get_machine_config(machine, runtime)
+            setup_environment(machine, ["test", "test"])
 
         os.environ["SERVER_IMAGE"] = config.get("server_image", "")
         os.environ["SERV_VOL"] = config.get("server_vol", "")
         os.environ["HOST_SOCK"] = config.get("host_sock", "")
 
+        if extra_args == "webui":
+            webui = True
+        else:
+            webui = False
+
         if model == "variable":
-            render_templates(machine, runtime)
-        if runtime == "variable":
-            render_templates(machine, rt)
-        if machine == "variable":
-            render_templates(m, runtime)
-        if extra_args == "gpu":
-            gpu_used = "yes" if i == 0 else "no"
-            render_templates(machine, runtime, gpu=gpu_used)
+            render_templates(machine, runtime, webui=webui)
+        elif runtime == "variable":
+            render_templates(machine, rt, webui=webui)
+        elif machine == "variable":
+            render_templates(m, runtime, webui=webui)
+        elif extra_args == "gpu":
+            gpu_used = False if i == 0 else True
+            render_templates(machine, runtime, gpu=gpu_used, webui=webui)
+        else:
+            render_templates(machine, runtime, webui=webui)
 
         run(config["command"])
-
 
 if __name__ == '__main__':
     main()

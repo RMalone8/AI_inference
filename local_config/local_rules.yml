@@ -6,7 +6,7 @@ groups:
         expr: |
           consumed_power_raw_milliwatts * 0.001
         labels:
-          unit: "watts" 
+          unit: "watts"
   - name: jetson_mem_conversion
     interval: 1s
     rules:
