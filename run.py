@@ -84,7 +84,7 @@ def render_templates(machine, runtime, gpu=True, webui=False):
     
     rendered_remote_compose = template_remote_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu, "webui": webui})
     rendered_remote_prom = template_remote_prom.render({"machine": machine, "runtime": runtime})
-    rendered_local_compose = template_local_compose.render({"webui": webui})
+    rendered_local_compose = template_local_compose.render({"runtime": runtime, "webui": webui})
 
     with open(f"{remote_config_dir}/remote_compose.yaml", "w") as f:
         f.write(rendered_remote_compose)
@@ -95,7 +95,7 @@ def render_templates(machine, runtime, gpu=True, webui=False):
 
 @click.command()
 @click.option('--machine', help='The machine to deploy the models onto', default="jetson")
-@click.option('--runtime', help='The runtime to serve the models on', default="ollama")
+@click.option('--runtime', help='The runtime to serve the models on', default="vllm")
 @click.option('--model', help='What aspect of the stack is varied', default="granite")
 @click.option('--extra_args', help='Extra aspects to control for', default=None)
 def main(machine, runtime, model, extra_args):
@@ -121,7 +121,10 @@ def main(machine, runtime, model, extra_args):
             setup_environment(machine, model_pairs[0])
         elif extra_args == "webui":  
             config = get_machine_config(machine, runtime)
-            setup_environment(machine, ["test", "test"])
+            if runtime == "ollama":
+                setup_environment(machine, ["test", "test"])
+            elif runtime == "vllm":
+                setup_environment(machine, model_pairs[i])
 
         os.environ["SERVER_IMAGE"] = config.get("server_image", "")
         os.environ["SERV_VOL"] = config.get("server_vol", "")

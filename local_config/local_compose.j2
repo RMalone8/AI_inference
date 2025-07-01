@@ -25,7 +25,11 @@ services:
   webui:
     image: ghcr.io/open-webui/open-webui:main
     environment:
+{% if runtime == 'ollama' %}
       - "OLLAMA_BASE_URL=http://host.containers.internal:11440"
+{% elif runtime == 'vllm' %}
+      - "OPENAI_API_BASE_URL=http://host.containers.internal:11440/v1"
+{% endif %}
     container_name: webui
     volumes:
       - open-webui:/app/backend/data
