@@ -95,7 +95,7 @@ def render_templates(machine, runtime, gpu=True, webui=False):
 
 @click.command()
 @click.option('--machine', help='The machine to deploy the models onto', default="jetson")
-@click.option('--runtime', help='The runtime to serve the models on', default="vllm")
+@click.option('--runtime', help='The runtime to serve the models on', default="ollama")
 @click.option('--model', help='What aspect of the stack is varied', default="granite")
 @click.option('--extra_args', help='Extra aspects to control for', default=None)
 def main(machine, runtime, model, extra_args):

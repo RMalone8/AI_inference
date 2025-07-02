@@ -21,19 +21,3 @@ services:
       - '--web.enable-remote-write-receiver'
     ports:
       - "9090:9090"
-
-  webui:
-    image: ghcr.io/open-webui/open-webui:main
-    environment:
-
-      - "OPENAI_API_BASE_URL=http://host.containers.internal:11440/v1"
-
-    container_name: webui
-    volumes:
-      - open-webui:/app/backend/data
-    ports:
-      - "8080:8080"
-    restart: unless-stopped
-
-volumes:
-  open-webui: {}

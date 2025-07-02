@@ -3,14 +3,15 @@
 #   "pydantic",
 #   "langchain[openai]",
 #   "requests",
+#   "prometheus_client",
 # ]
 # ///
 
 from langchain_openai import ChatOpenAI
-
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from pydantic import BaseModel, Field
+from prometheus_client import start_http_server, Gauge
 
 import base64
 from pathlib import Path
@@ -18,9 +19,9 @@ from pathlib import Path
 import os
 import time
 import requests
-import subprocess
 
-ITER_NO = 10
+
+ITER_NO = 20
 
 class Animal(BaseModel):
     species: str = Field(description="The species of the animal")
@@ -32,8 +33,14 @@ SYSTEM = SystemMessage(
 )
 
 def main():
-    model_name = os.environ.get("CLIENT_TYPE", "Cannot Find Model Name")
+
+    start_http_server(7000)
+
+    model_name = os.environ.get("CLIENT_NAME", "Cannot Find Model Name")
+    model_specs = os.environ.get("CLIENT_SPECS", "Cannot Find Model Specs")
     host = os.environ.get("HOST", "Cannot Find Host")
+
+    client_running = Gauge(f'client_running_{model_specs}', 'Client is active')
     
     print(f"-CLIENT CONFIGURATION-")
     print(f"Model Name: {model_name}")
@@ -41,7 +48,6 @@ def main():
     print(f"API Base: {host}/v1")
     print("=" * 30)
 
-    # Wait for server to be ready
     print("Waiting for server to be ready...")
     max_retries = 30
     for attempt in range(max_retries):
@@ -64,6 +70,7 @@ def main():
         api_key="dummy",
     ) # .with_structured_output(Animal)
 
+    client_running.set(1)
     for i in range(ITER_NO):
         r = requests.get('https://cataas.com/cat')
         r.raise_for_status()
@@ -92,6 +99,7 @@ def main():
                 ]
             )
         )
+    client_running.set(0)
 
 if __name__ == "__main__":
     main()

@@ -55,7 +55,8 @@ services:
 {% elif runtime == 'vllm' %}
       - HOST=http://{{runtime}}-server-${MODEL_SPECS}{% if gpu %}-gpu{% endif %}:8000
 {% endif %}
-      - CLIENT_TYPE=${MODEL_NAME}
+      - CLIENT_NAME=${MODEL_NAME}
+      - CLIENT_SPECS=${MODEL_SPECS}
     tty: true
 {% endif %}
 
