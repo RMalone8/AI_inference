@@ -70,7 +70,7 @@ def load_models(runtime):
         
     return model_pairs
 
-def render_templates(machine, runtime, model_specs, gpu=True, webui=False):
+def render_templates(machine, runtime, model_specs, gpu=True, webui=False, context=4096):
     remote_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/remote_config"
     local_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/local_config"
 
@@ -82,7 +82,7 @@ def render_templates(machine, runtime, model_specs, gpu=True, webui=False):
     template_remote_prom = remote_env.get_template("remote_prom_config.j2")
     template_local_compose = local_env.get_template("local_compose.j2")
     
-    rendered_remote_compose = template_remote_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu, "webui": webui})
+    rendered_remote_compose = template_remote_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu, "webui": webui, "context": context})
     rendered_remote_prom = template_remote_prom.render({"machine": machine, "runtime": runtime, "model_specs": model_specs})
     rendered_local_compose = template_local_compose.render({"runtime": runtime, "webui": webui})
 
@@ -125,6 +125,9 @@ def main(machine, runtime, model, extra_args):
                 setup_environment(machine, ["test", "test"])
             elif runtime == "vllm":
                 setup_environment(machine, model_pairs[i])
+        elif extra_args == "context":
+            config = get_machine_config(machine, runtime)
+            setup_environment(machine, model_pairs[0])
 
         os.environ["SERVER_IMAGE"] = config.get("server_image", "")
         os.environ["SERV_VOL"] = config.get("server_vol", "")
@@ -144,6 +147,9 @@ def main(machine, runtime, model, extra_args):
         elif extra_args == "gpu":
             gpu_used = False if i == 0 else True
             render_templates(machine, runtime, model_pairs[0][1], gpu=gpu_used, webui=webui)
+        elif extra_args == "context":
+            context = 4096 if i == 0 else 8192
+            render_templates(machine, runtime, model_pairs[0][1], webui=webui, context=context)
         else:
             render_templates(machine, runtime, model_pairs[i][1], webui=webui)
 
