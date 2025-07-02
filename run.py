@@ -70,7 +70,7 @@ def load_models(runtime):
         
     return model_pairs
 
-def render_templates(machine, runtime, gpu=True, webui=False):
+def render_templates(machine, runtime, model_specs, gpu=True, webui=False):
     remote_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/remote_config"
     local_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/local_config"
 
@@ -83,7 +83,7 @@ def render_templates(machine, runtime, gpu=True, webui=False):
     template_local_compose = local_env.get_template("local_compose.j2")
     
     rendered_remote_compose = template_remote_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu, "webui": webui})
-    rendered_remote_prom = template_remote_prom.render({"machine": machine, "runtime": runtime})
+    rendered_remote_prom = template_remote_prom.render({"machine": machine, "runtime": runtime, "model_specs": model_specs})
     rendered_local_compose = template_local_compose.render({"runtime": runtime, "webui": webui})
 
     with open(f"{remote_config_dir}/remote_compose.yaml", "w") as f:
@@ -136,16 +136,16 @@ def main(machine, runtime, model, extra_args):
             webui = False
 
         if model == "variable":
-            render_templates(machine, runtime, webui=webui)
+            render_templates(machine, runtime, model_pairs[i][1], webui=webui)
         elif runtime == "variable":
-            render_templates(machine, rt, webui=webui)
+            render_templates(machine, rt, model_pairs[0][1], webui=webui)
         elif machine == "variable":
-            render_templates(m, runtime, webui=webui)
+            render_templates(m, runtime, model_pairs[0][1], webui=webui)
         elif extra_args == "gpu":
             gpu_used = False if i == 0 else True
-            render_templates(machine, runtime, gpu=gpu_used, webui=webui)
+            render_templates(machine, runtime, model_pairs[0][1], gpu=gpu_used, webui=webui)
         else:
-            render_templates(machine, runtime, webui=webui)
+            render_templates(machine, runtime, model_pairs[i][1], webui=webui)
 
         run(config["command"])
 
