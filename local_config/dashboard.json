@@ -241,7 +241,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "stddev_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running_gemma3_.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
+          "expr": "stddev_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
           "legendFormat": "{{model_specs}}_power_variance",
           "range": true,
           "refId": "A"
@@ -311,7 +311,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "avg_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running_gemma3_.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
+          "expr": "avg_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
           "legendFormat": "{{model_specs}}_{{statistic}}",
           "range": true,
           "refId": "A"
@@ -381,7 +381,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "stddev_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running_gemma3_.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
+          "expr": "stddev_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
           "legendFormat": "{{model_specs}}_power_variance",
           "range": true,
           "refId": "A"
@@ -822,7 +822,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "avg_over_time(\n  (\n    gpu_mem_used\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running_gemma3_.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
+          "expr": "avg_over_time(\n  (\n    gpu_mem_used\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
           "hide": false,
           "instant": false,
           "legendFormat": "{{model_specs}}",

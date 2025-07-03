@@ -40,6 +40,9 @@ services:
       - "vllm"
       - "serve"
       - "${MODEL_NAME}"
+      - "--max-model-len"
+      - "{{ context }}"
+    
 {% endif %}
 
 {% if not webui %}
