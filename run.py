@@ -101,7 +101,15 @@ def render_templates(config):
 @click.option('--context', help='Extra aspects to control for', default=None)
 @click.option('--webui', help='Whether to run the webui', default=False)
 @click.option('--gpu', help='Whether to use the gpu', default=True)
-def main(machine, runtime, model, temp, context, webui, gpu):
+@click.option('--powercycle', help='Whether to powercycle the machine', default=False)
+def main(machine, runtime, model, temp, context, webui, gpu, powercycle):
+    
+    if powercycle:
+        os.environ["POWERCYCLE"] = "True"
+    else:
+        os.environ["POWERCYCLE"] = "False"
+
+    #print(f"Powercycle: {os.environ['POWERCYCLE']}")
 
     template_config = {
         "machine": machine,
@@ -155,6 +163,7 @@ def main(machine, runtime, model, temp, context, webui, gpu):
         render_templates(template_config)
 
         run(config["command"])
+        os.environ["POWERCYCLE"] = "False" # we only need to powercycle once
 
 if __name__ == '__main__':
     main()
