@@ -39,6 +39,7 @@ def main():
     model_name = os.environ.get("CLIENT_NAME", "Cannot Find Model Name")
     model_specs = os.environ.get("CLIENT_SPECS", "Cannot Find Model Specs")
     host = os.environ.get("HOST", "Cannot Find Host")
+    temp = os.environ.get("TEMP", "Cannot Find Temp")
 
     client_running = Gauge(f'client_running_{model_specs}', 'Client is active')
     
@@ -65,7 +66,7 @@ def main():
 
     model = ChatOpenAI(
         model=model_name,
-        temperature=0,
+        temperature=float(temp),
         base_url=f"{host}/v1",
         api_key="dummy",
     ) # .with_structured_output(Animal)

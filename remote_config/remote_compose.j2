@@ -62,6 +62,7 @@ services:
 {% endif %}
       - CLIENT_NAME=${MODEL_NAME}
       - CLIENT_SPECS=${MODEL_SPECS}
+      - TEMP={{temp}}
     tty: true
 {% endif %}
 

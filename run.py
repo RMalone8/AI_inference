@@ -70,7 +70,7 @@ def load_models(runtime):
         
     return model_pairs
 
-def render_templates(machine, runtime, model_specs, gpu=True, webui=False, context=4096):
+def render_templates(config):
     remote_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/remote_config"
     local_config_dir = f"{os.path.dirname(os.path.abspath(__file__))}/local_config"
 
@@ -82,9 +82,9 @@ def render_templates(machine, runtime, model_specs, gpu=True, webui=False, conte
     template_remote_prom = remote_env.get_template("remote_prom_config.j2")
     template_local_compose = local_env.get_template("local_compose.j2")
     
-    rendered_remote_compose = template_remote_compose.render({"machine": machine, "runtime": runtime, "gpu": gpu, "webui": webui, "context": context})
-    rendered_remote_prom = template_remote_prom.render({"machine": machine, "runtime": runtime, "model_specs": model_specs})
-    rendered_local_compose = template_local_compose.render({"runtime": runtime, "webui": webui})
+    rendered_remote_compose = template_remote_compose.render(config)
+    rendered_remote_prom = template_remote_prom.render(config)
+    rendered_local_compose = template_local_compose.render(config)
 
     with open(f"{remote_config_dir}/remote_compose.yaml", "w") as f:
         f.write(rendered_remote_compose)
@@ -95,63 +95,64 @@ def render_templates(machine, runtime, model_specs, gpu=True, webui=False, conte
 
 @click.command()
 @click.option('--machine', help='The machine to deploy the models onto', default="jetson")
-@click.option('--runtime', help='The runtime to serve the models on', default="vllm")
+@click.option('--runtime', help='The runtime to serve the models on', default="ollama")
 @click.option('--model', help='What aspect of the stack is varied', default="granite")
-@click.option('--extra_args', help='Extra aspects to control for', default=None)
-def main(machine, runtime, model, extra_args):
+@click.option('--temp', help='The randomness of the model', default=None)
+@click.option('--context', help='Extra aspects to control for', default=None)
+@click.option('--webui', help='Whether to run the webui', default=False)
+@click.option('--gpu', help='Whether to use the gpu', default=True)
+def main(machine, runtime, model, temp, context, webui, gpu):
 
-    if runtime != "variable":
-        model_pairs = load_models(runtime)
+    template_config = {
+        "machine": machine,
+        "runtime": runtime,
+        "model": model,
+        "temp": 0.0,
+        "context": 4096,
+        "webui": webui,
+        "gpu": True
+    }
+
+    model_index = 0
 
     for i in range(2): # just picking 2 for now
-        if model == "variable":
-            config = get_machine_config(machine, runtime)
-            setup_environment(machine, model_pairs[i])
-        elif runtime == "variable":
-            rt = "vllm" if i == 0 else "ollama"
-            model_pairs = load_models(rt)
-            config = get_machine_config(machine, rt)
-            setup_environment(machine, model_pairs[0])
-        elif machine == "variable":
-            m = "jetson" if i == 0 else "armchair"
-            config = get_machine_config(m, runtime)
-            setup_environment(machine, model_pairs[0])
-        elif extra_args == "gpu":
-            config = get_machine_config(machine, runtime)
-            setup_environment(machine, model_pairs[0])
-        elif extra_args == "webui":  
-            config = get_machine_config(machine, runtime)
-            if runtime == "ollama":
-                setup_environment(machine, ["test", "test"])
-            elif runtime == "vllm":
-                setup_environment(machine, model_pairs[i])
-        elif extra_args == "context":
-            config = get_machine_config(machine, runtime)
-            setup_environment(machine, model_pairs[0])
 
+        if runtime != "variable":
+            rt = runtime
+        else:
+            rt = "vllm" if i == 0 else "ollama"
+            template_config["runtime"] = rt
+
+        if model == "variable" or webui == "webui" and runtime == "vllm":
+            model_index = i
+
+        if machine == "variable":
+            m = "jetson" if i == 0 else "armchair"
+            template_config["machine"] = m
+        else:
+            m = machine
+
+        if context == "variable":
+            template_config["context"] = 4096 if i == 0 else 8192
+
+        if temp == "variable":
+            template_config["temp"] = 0.0 if i == 0 else 1.0
+
+        if gpu == "variable":
+            template_config["gpu"] = True if i == 0 else False
+
+        model_pairs = load_models(rt)
+        config = get_machine_config(m, rt)
         os.environ["SERVER_IMAGE"] = config.get("server_image", "")
         os.environ["SERV_VOL"] = config.get("server_vol", "")
         os.environ["HOST_SOCK"] = config.get("host_sock", "")
-
-        if extra_args == "webui":
-            webui = True
+        if webui == "webui" and runtime == "ollama":
+            setup_environment(m, ["test", "test"])
+            template_config["model_specs"] = "test"
         else:
-            webui = False
-
-        if model == "variable":
-            render_templates(machine, runtime, model_pairs[i][1], webui=webui)
-        elif runtime == "variable":
-            render_templates(machine, rt, model_pairs[0][1], webui=webui)
-        elif machine == "variable":
-            render_templates(m, runtime, model_pairs[0][1], webui=webui)
-        elif extra_args == "gpu":
-            gpu_used = False if i == 0 else True
-            render_templates(machine, runtime, model_pairs[0][1], gpu=gpu_used, webui=webui)
-        elif extra_args == "context":
-            context = 4096 if i == 0 else 8192
-            render_templates(machine, runtime, model_pairs[0][1], webui=webui, context=context)
-        else:
-            render_templates(machine, runtime, model_pairs[i][1], webui=webui)
+            setup_environment(m, model_pairs[model_index])
+            template_config["model_specs"] = model_pairs[model_index][1]
+        render_templates(template_config)
 
         run(config["command"])
 
