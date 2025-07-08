@@ -6,6 +6,8 @@ services:
     container_name: grafana
     ports:
       - "3000:3000"
+    # environment:
+    #   - GF_INSTALL_PLUGINS=volkovlabs-echarts-panel,grafana-piechart-panel
 
   prometheus:
     build:

@@ -43,12 +43,301 @@
   "links": [],
   "panels": [
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 0
+      },
+      "id": 29,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "(25 - min_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n  )[$__range:5s]\n)) / 2",
+          "legendFormat": "Max StdDev",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "stddev_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "0",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "StdDev Radar Axis",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "decbytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 8
+      },
+      "id": 28,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "gpu_mem_used * 1024 * 1024",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "node_memory_MemAvailable_bytes",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "0",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "C"
+        }
+      ],
+      "title": "GPU Memory Radar Axis",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 0,
+        "y": 16
+      },
+      "id": 27,
+      "options": {
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
+      },
+      "pluginVersion": "12.0.1",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "avg_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n    * on() group_left(model_specs)\n    (\n      label_replace(\n        {__name__=~\"client_running.*\"},\n        \"model_name\",\n        \"$1\",\n        \"__name__\",\n        \"client_running_(.*)\"\n      ) == 1\n    )\n  )[$__range:5s]\n)",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "min_over_time(\n  (\n    consumed_power{statistic=\"power\"}\n  )[$__range:5s]\n)",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "25",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "B"
+        }
+      ],
+      "title": "Power Consumption Radar Axis",
+      "type": "bargauge"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 24
       },
       "id": 16,
       "panels": [],
@@ -119,7 +408,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 1
+        "y": 25
       },
       "id": 9,
       "options": {
@@ -221,7 +510,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 1
+        "y": 25
       },
       "id": 23,
       "options": {
@@ -280,7 +569,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 9
+        "y": 33
       },
       "id": 22,
       "options": {
@@ -350,7 +639,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 9
+        "y": 33
       },
       "id": 25,
       "options": {
@@ -387,7 +676,7 @@
           "refId": "A"
         }
       ],
-      "title": "Power Consumption Variance",
+      "title": "Power Consumption Standard Deviation",
       "type": "bargauge"
     },
     {
@@ -454,7 +743,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 17
+        "y": 41
       },
       "id": 5,
       "options": {
@@ -498,7 +787,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 25
+        "y": 49
       },
       "id": 15,
       "panels": [],
@@ -563,7 +852,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 26
+        "y": 50
       },
       "id": 12,
       "options": {
@@ -674,7 +963,7 @@
         "h": 8,
         "w": 18,
         "x": 6,
-        "y": 26
+        "y": 50
       },
       "id": 7,
       "options": {
@@ -786,7 +1075,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 34
+        "y": 58
       },
       "id": 21,
       "options": {
@@ -839,7 +1128,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 42
+        "y": 66
       },
       "id": 14,
       "panels": [],
@@ -917,7 +1206,7 @@
         "h": 8,
         "w": 9,
         "x": 0,
-        "y": 43
+        "y": 67
       },
       "id": 3,
       "options": {
@@ -1067,7 +1356,7 @@
         "h": 8,
         "w": 15,
         "x": 9,
-        "y": 43
+        "y": 67
       },
       "id": 1,
       "options": {
@@ -1178,7 +1467,7 @@
         "h": 8,
         "w": 11,
         "x": 0,
-        "y": 51
+        "y": 75
       },
       "id": 11,
       "options": {
@@ -1257,7 +1546,7 @@
         "h": 8,
         "w": 13,
         "x": 11,
-        "y": 51
+        "y": 75
       },
       "id": 26,
       "options": {
@@ -1310,7 +1599,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 59
+        "y": 83
       },
       "id": 24,
       "panels": [
