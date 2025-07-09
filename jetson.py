@@ -16,7 +16,7 @@ POWERCYCLE = os.environ.get("POWERCYCLE", "False").lower() == "true" # set this 
 # init jumpstarter client from env (jmp shell)
 with env() as dut:
     if POWERCYCLE:
-        # ensure the usb dirve is connected to the dut
+        # ensure the usb drive is connected to the dut
         dut.storage.dut()
 
         # open serial console
@@ -57,3 +57,9 @@ with env() as dut:
                 os.environ["CONTAINER_SSHKEY"] = "/Users/rmalone/.ssh/id_ed25519"
                 run("podman images")
                 run("./startup.sh")
+
+            # run("podman --connection podman-machine-default compose -f local_config/local_compose.yaml up --build --detach")
+            # print("Waiting for podman to start locally")
+            # ssh.sudo("curl -LJO https://github.com/RMalone8/AI_inference/archive/refs/heads/main.zip && unzip AI_inference-main.zip && cd AI_inference-main") # if not already cloned
+            # print("Starting the startup script")
+            # ssh.sudo("/root/AI_infer/startup.sh")

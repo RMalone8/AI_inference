@@ -135,7 +135,7 @@
           "refId": "C"
         }
       ],
-      "title": "StdDev Radar Axis",
+      "title": "Power StdDev Radar Axis (Stability)",
       "type": "bargauge"
     },
     {
