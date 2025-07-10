@@ -1,10 +1,17 @@
 services:
   server:
+    container_name: {{runtime}}-server-${MODEL_SPECS}{% if gpu %}-gpu{% endif %}
+{% if runtime == 'vllm' and not gpu %}
+    build:
+      context: .
+      dockerfile: Dockerfile.vllmcpu
+    privileged: true
+{% else %}
     image: ${SERVER_IMAGE}
-    container_name: {{runtime}}-server-${MODEL_SPECS}{% if gpu %}-gpu{% endif %} 
-{% if runtime == 'ollama' %}
     volumes:
       - ${SERV_VOL}
+{% endif %}
+{% if runtime == 'ollama' %}
     ports:
       - "11434:11434"
     healthcheck:
@@ -15,10 +22,7 @@ services:
       start_period: 60s
     environment:
       - OLLAMA_CONTEXT_LENGTH={{ context }}
-{% endif %}
-{% if runtime == 'vllm' %}
-    volumes:
-      - ${SERV_VOL}
+{% elif runtime == 'vllm' %}
     ports:
       - "8000:8000"
     healthcheck:
@@ -40,9 +44,10 @@ services:
       - "vllm"
       - "serve"
       - "${MODEL_NAME}"
+{% if context %}
       - "--max-model-len"
       - "{{ context }}"
-    
+{% endif %}
 {% endif %}
 
 {% if not webui %}

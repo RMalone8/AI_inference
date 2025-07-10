@@ -95,7 +95,7 @@ def render_templates(config):
 
 @click.command()
 @click.option('--machine', help='The machine to deploy the models onto', default="jetson")
-@click.option('--runtime', help='The runtime to serve the models on', default="ollama")
+@click.option('--runtime', help='The runtime to serve the models on', default="vllm")
 @click.option('--model', help='What aspect of the stack is varied', default="granite")
 @click.option('--temp', help='The randomness of the model', default=None)
 @click.option('--context', help='Extra aspects to control for', default=None)
@@ -115,10 +115,10 @@ def main(machine, runtime, model, temp, context, webui, gpu, powercycle):
         "machine": machine,
         "runtime": runtime,
         "model": model,
-        "temp": 0.0,
-        "context": 4096,
+        "temp": temp,
+        "context": context,
         "webui": webui,
-        "gpu": True
+        "gpu": gpu
     }
 
     model_index = 0
@@ -142,9 +142,15 @@ def main(machine, runtime, model, temp, context, webui, gpu, powercycle):
 
         if context == "variable":
             template_config["context"] = 4096 if i == 0 else 8192
+        elif context:
+            template_config["context"] = context
 
         if temp == "variable":
             template_config["temp"] = 0.0 if i == 0 else 1.0
+        elif temp:
+            template_config["temp"] = temp
+        else:
+            template_config["temp"] = 0.0
 
         if gpu == "variable":
             template_config["gpu"] = True if i == 0 else False
