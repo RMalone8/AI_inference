@@ -1,6 +1,6 @@
 services:
   server:
-    container_name: {{runtime}}-server-${MODEL_SPECS}{% if gpu %}-gpu{% endif %}
+    container_name: {{runtime}}-server-${MODEL_NAME}{% if gpu %}-gpu{% endif %}
 {% if runtime == 'vllm' and not gpu %}
     build:
       context: .
@@ -43,7 +43,7 @@ services:
     command:
       - "vllm"
       - "serve"
-      - "${MODEL_NAME}"
+      - "${MODEL_PATH}"
 {% if context %}
       - "--max-model-len"
       - "{{ context }}"
@@ -58,15 +58,15 @@ services:
     depends_on:
       server:
         condition: service_healthy
-    container_name: {{runtime}}-client-${MODEL_SPECS}{% if gpu %}-gpu{% endif %}
+    container_name: {{runtime}}-client-${MODEL_NAME}{% if gpu %}-gpu{% endif %}
     environment:
 {% if runtime == 'ollama' %}
-      - HOST=http://{{runtime}}-server-${MODEL_SPECS}{% if gpu %}-gpu{% endif %}:11434
+      - HOST=http://{{runtime}}-server-${MODEL_NAME}{% if gpu %}-gpu{% endif %}:11434
 {% elif runtime == 'vllm' %}
-      - HOST=http://{{runtime}}-server-${MODEL_SPECS}{% if gpu %}-gpu{% endif %}:8000
+      - HOST=http://{{runtime}}-server-${MODEL_NAME}{% if gpu %}-gpu{% endif %}:8000
 {% endif %}
+      - CLIENT_PATH=${MODEL_PATH}
       - CLIENT_NAME=${MODEL_NAME}
-      - CLIENT_SPECS=${MODEL_SPECS}
       - TEMP={{temp}}
     tty: true
 {% endif %}

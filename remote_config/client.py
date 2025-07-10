@@ -20,7 +20,6 @@ import os
 import time
 import requests
 
-
 ITER_NO = 20
 
 class Animal(BaseModel):
@@ -36,15 +35,15 @@ def main():
 
     start_http_server(7000)
 
+    model_path = os.environ.get("CLIENT_PATH", "Cannot Find Model Path")
     model_name = os.environ.get("CLIENT_NAME", "Cannot Find Model Name")
-    model_specs = os.environ.get("CLIENT_SPECS", "Cannot Find Model Specs")
     host = os.environ.get("HOST", "Cannot Find Host")
     temp = os.environ.get("TEMP", "Cannot Find Temp")
 
-    client_running = Gauge(f'client_running_{model_specs}', 'Client is active')
+    client_running = Gauge(f'client_running_{model_name}', 'Client is active')
     
     print(f"-CLIENT CONFIGURATION-")
-    print(f"Model Name: {model_name}")
+    print(f"Model Name: {model_path}")
     print(f"Host: {host}")
     print(f"API Base: {host}/v1")
     print("=" * 30)
@@ -65,7 +64,7 @@ def main():
         return
 
     model = ChatOpenAI(
-        model=model_name,
+        model=model_path,
         temperature=float(temp),
         base_url=f"{host}/v1",
         api_key="dummy",
@@ -76,7 +75,7 @@ def main():
         r = requests.get('https://cataas.com/cat')
         r.raise_for_status()
         print(f"ITER: {i}")
-        print(f"{model_name} is asked: ")
+        print(f"{model_path} is asked: ")
         print("Describe the breed and species of the animal in this image, return as JSON")
         print("The model returns: ")
         print(
