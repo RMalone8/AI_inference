@@ -48,6 +48,10 @@ services:
       - "--max-model-len"
       - "{{ context }}"
 {% endif %}
+{% if not gpu %}
+      - "--dtype"
+      - "float16"
+{% endif %}
 {% endif %}
 
 {% if not webui %}

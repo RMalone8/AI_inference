@@ -40,13 +40,15 @@ def get_machine_config(machine, runtime):
         return configs[machine][runtime]
     return {"command": f"echo 'Invalid machine: {machine} or runtime: {runtime}'"}
 
-def setup_environment(machine, model_pair):
-    if machine == "armchair":
+def setup_environment(config):
+    if config['machine'] == "armchair":
         os.environ["CONTAINER_HOST"] = "ssh://ryan@ewr0.nichi.link:9022/run/user/1001/podman/podman.sock"
         os.environ["CONTAINER_SSHKEY"] = "/Users/rmalone/.ssh/id_ed25519"
     
-    os.environ["MODEL_PATH"] = model_pair[0]
-    os.environ["MODEL_NAME"] = model_pair[1]
+    os.environ["MODEL_PATH"] = config['model_path']
+    os.environ["MODEL_NAME"] = config['model_name']
+    os.environ["WEBUI"] = str(config['webui'])
+    os.environ["SERVER_PORT"] = "8000" if config['runtime'] == "vllm" else "11434"
 
     if "HF_TOKEN" in os.environ:
         os.environ["HF_TOKEN"] = os.environ["HF_TOKEN"]
@@ -97,8 +99,8 @@ def load_stack_configs(config_args: dict):
             configs.append(config)
             stack_count += 1
     else: # otherwise, use the provided config args
-        stack_count = 2
-        for i in range(stack_count): # just picking 2 for now
+        stack_count = 2 # just picking 2 for now
+        for i in range(stack_count):
             config = {}
 
             model_index = 0
@@ -188,11 +190,6 @@ def render_templates(config):
 
 def main(machine, runtime, model, temp, context, webui, gpu, powercycle, config_path):
     
-    if powercycle:
-        os.environ["POWERCYCLE"] = "True"
-    else:
-        os.environ["POWERCYCLE"] = "False"
-
     config_args = {
         "machine": machine,
         "runtime": runtime,
@@ -205,6 +202,8 @@ def main(machine, runtime, model, temp, context, webui, gpu, powercycle, config_
         "config_path": config_path
     }
 
+    os.environ["POWERCYCLE"] = str(powercycle)
+
     template_configs, stack_count = load_stack_configs(config_args)
 
     for i in range(stack_count):
@@ -215,7 +214,7 @@ def main(machine, runtime, model, temp, context, webui, gpu, powercycle, config_
 
         model_pair = [template_configs[i]['model_path'], template_configs[i]['model_name']]
 
-        setup_environment(template_configs[i]['machine'], model_pair)
+        setup_environment(template_configs[i])
         render_templates(template_configs[i])
 
         run(config["command"])
