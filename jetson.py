@@ -55,7 +55,7 @@ with env() as dut:
         ssh.sudo("chmod -R 0777 /run/podman")
         # ssh.shell()
         if WEBUI == "true":
-            with ssh.forward_remote(9090, 9090, local_host="0.0.0.0", remote_host="0.0.0.0"), ssh.forward_local(11440, SERVER_PORT, local_host="0.0.0.0", remote_host="0.0.0.0"):
+            with ssh.forward_remote(9090, 9090, local_host="0.0.0.0", remote_host="0.0.0.0"), ssh.forward_local(local_port=11440, remote_port=SERVER_PORT, local_host="0.0.0.0", remote_host="0.0.0.0"):
                 print(f"SERVER_PORT: {SERVER_PORT}")
                 with TcpPortforwardAdapter(client=dut.ssh) as addr:
                     os.environ["CONTAINER_HOST"] = f"ssh://root@{addr[0]}:{addr[1]}/run/podman/podman.sock"

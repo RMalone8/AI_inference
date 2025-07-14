@@ -96,6 +96,11 @@ def load_stack_configs(config_args: dict):
                 "gpu": stack_data.get('gpu', True),
                 "webui": stack_data.get('webui', False),
             }
+
+            if config['webui'] and config['runtime'] == "ollama":
+                config["model_name"] = "test"
+                config["model_path"] = "test"
+
             configs.append(config)
             stack_count += 1
     else: # otherwise, use the provided config args
