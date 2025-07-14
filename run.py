@@ -3,6 +3,9 @@ from invoke import run
 from jinja2 import Environment, FileSystemLoader
 import os
 import yaml
+import json
+from datetime import datetime
+from prometheus_api_client import PrometheusConnect
 
 def get_machine_config(machine, runtime):
     configs = {
@@ -182,6 +185,45 @@ def render_templates(config):
     with open(f"{local_config_dir}/local_compose.yaml", "w") as f:
         f.write(rendered_local_compose)
 
+def store_results(config):
+
+    prometheus_url = "http://localhost:9090"
+    prometheus_client = PrometheusConnect(url=prometheus_url)
+
+    power_variance_query = '''stddev_over_time(
+    (
+        consumed_power{statistic="power"}
+        * on() group_left(model_specs)
+        (
+            label_replace(
+            {__name__=~"client_running.*"},
+            "model_name",
+            "$1",
+            "__name__",
+            "client_running_(.*)"
+            ) == 1
+        )
+    )[1h:5s]
+    )'''
+
+    power_variance_result = prometheus_client.custom_query(power_variance_query)
+    print(power_variance_result)
+
+    results_file = f"{os.path.dirname(os.path.abspath(__file__))}/results/results.json"
+    with open(results_file, "r") as f:
+        results = json.load(f)
+
+    config['date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    config['data'] = {
+        "power_variance": power_variance_result
+    }
+
+    results[config['name']] = config
+
+    with open(results_file, "w") as f:
+        json.dump(results, f, indent=4)
+
 @click.command()
 @click.option('--machine', help='The machine to deploy the models onto', default="jetson")
 @click.option('--runtime', help='The runtime to serve the models on', default="ollama")
@@ -222,7 +264,10 @@ def main(machine, runtime, model, temp, context, webui, gpu, powercycle, config_
         setup_environment(template_configs[i])
         render_templates(template_configs[i])
 
+        print(template_configs[i])
+
         run(config["command"])
+        store_results(template_configs[i])
         os.environ["POWERCYCLE"] = "False" # we only need to powercycle once
 
 if __name__ == '__main__':

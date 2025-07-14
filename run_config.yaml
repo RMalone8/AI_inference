@@ -6,12 +6,10 @@ stacks:
     model_path: "gemma3:4b"
     temp: 0.0
     gpu: true
-    webui: true
   stack2: 
     machine: jetson
     runtime: vllm
-    model_name: "granite-vision-3.2-2b"
-    model_path: "ibm-granite/granite-vision-3.2-2b"
+    model_name: "gemma3_12b"
+    model_path:  "google/gemma-3-12b-it"
     temp: 0.0
-    gpu: false
-    context: 52416
+    gpu: true

@@ -31,6 +31,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 120s
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
 {% endif %}
 {% if machine == 'jetson' and gpu %}
     devices:

@@ -1,0 +1,22 @@
+{
+    "jetson-ollama-gemma3_4b": {
+        "webui": true,
+        "gpu": true,
+        "runtime": "ollama",
+        "model": "gemma3_4b",
+        "temp": 0.0,
+        "context": 52416
+    },
+    "stack1": {
+        "name": "stack1",
+        "machine": "jetson",
+        "runtime": "ollama",
+        "model_name": "gemma3_4b",
+        "model_path": "gemma3:4b",
+        "temp": 0.0,
+        "context": null,
+        "gpu": true,
+        "webui": false
+        
+    }
+}
