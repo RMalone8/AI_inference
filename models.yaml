@@ -11,7 +11,7 @@ models:
         ollama:
           name: "mrutkows/granite3.2-vision:2b"
         vllm:
-          name: "ibm-granite/granite-vision-3.3-2b"
+          name: "ibm-granite/granite-3.3-2b-instruct"
         display_name: "granite3_12b"
   gemma3:
     variants:

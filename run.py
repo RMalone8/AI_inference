@@ -43,11 +43,12 @@ def get_machine_config(machine, runtime):
         return configs[machine][runtime]
     return {"command": f"echo 'Invalid machine: {machine} or runtime: {runtime}'"}
 
-def setup_environment(config):
+def setup_environment(config, iter_no):
     if config['machine'] == "armchair":
         os.environ["CONTAINER_HOST"] = "ssh://ryan@ewr0.nichi.link:9022/run/user/1001/podman/podman.sock"
         os.environ["CONTAINER_SSHKEY"] = "/Users/rmalone/.ssh/id_ed25519"
     
+    os.environ["ITER_NO"] = str(iter_no)
     os.environ["MODEL_PATH"] = config['model_path']
     os.environ["MODEL_NAME"] = config['model_name']
     os.environ["WEBUI"] = str(config['webui'])
@@ -185,29 +186,38 @@ def render_templates(config):
     with open(f"{local_config_dir}/local_compose.yaml", "w") as f:
         f.write(rendered_local_compose)
 
-def store_results(config):
+def store_results(config, iter_no):
 
     prometheus_url = "http://localhost:9090"
     prometheus_client = PrometheusConnect(url=prometheus_url)
 
-    power_variance_query = '''stddev_over_time(
+    power_variance_query = f'''stddev_over_time(
     (
-        consumed_power{statistic="power"}
+        consumed_power{{statistic="power"}}
         * on() group_left(model_specs)
         (
-            label_replace(
-            {__name__=~"client_running.*"},
-            "model_name",
-            "$1",
-            "__name__",
-            "client_running_(.*)"
-            ) == 1
+            client_running_{config['model_name']}_{iter_no} == 1
+        )
+    )[1h:5s]
+    )'''
+    gpu_memory_query = "gpu_mem_used * 1024 * 1024"
+    power_consumption_query = f'''avg_over_time(
+    (
+        consumed_power{{statistic="power"}}
+        * on() group_left(model_specs)
+        (
+            client_running_{config['model_name']}_{iter_no} == 1
         )
     )[1h:5s]
     )'''
 
     power_variance_result = prometheus_client.custom_query(power_variance_query)
+    gpu_memory_result = prometheus_client.custom_query(gpu_memory_query)
+    power_consumption_result = prometheus_client.custom_query(power_consumption_query)
+
     print(power_variance_result)
+    print(gpu_memory_result)
+    print(power_consumption_result)
 
     results_file = f"{os.path.dirname(os.path.abspath(__file__))}/results/results.json"
     with open(results_file, "r") as f:
@@ -216,7 +226,9 @@ def store_results(config):
     config['date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     config['data'] = {
-        "power_variance": power_variance_result
+        "power_variance": power_variance_result,
+        "gpu_memory": gpu_memory_result,
+        "power_consumption": power_consumption_result
     }
 
     results[config['name']] = config
@@ -261,13 +273,11 @@ def main(machine, runtime, model, temp, context, webui, gpu, powercycle, config_
 
         model_pair = [template_configs[i]['model_path'], template_configs[i]['model_name']]
 
-        setup_environment(template_configs[i])
+        setup_environment(template_configs[i], i)
         render_templates(template_configs[i])
 
-        print(template_configs[i])
-
         run(config["command"])
-        store_results(template_configs[i])
+        store_results(template_configs[i], i)
         os.environ["POWERCYCLE"] = "False" # we only need to powercycle once
 
 if __name__ == '__main__':

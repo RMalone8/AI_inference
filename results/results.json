@@ -1,22 +1,74 @@
 {
-    "jetson-ollama-gemma3_4b": {
-        "webui": true,
-        "gpu": true,
-        "runtime": "ollama",
-        "model": "gemma3_4b",
-        "temp": 0.0,
-        "context": 52416
+    "max_values": {
+        "power_variance": 8.2,
+        "gpu_memory": 60852012032,
+        "power_consumption": 25
     },
-    "stack1": {
-        "name": "stack1",
-        "machine": "jetson",
-        "runtime": "ollama",
-        "model_name": "gemma3_4b",
-        "model_path": "gemma3:4b",
-        "temp": 0.0,
-        "context": null,
-        "gpu": true,
-        "webui": false
-        
+    "min_values": {
+        "power_variance": 0.0,
+        "gpu_memory": 0,
+        "power_consumption": 0.0
+    },
+    "stacks": {
+        "stack2": {
+            "name": "stack2",
+            "machine": "jetson",
+            "runtime": "ollama",
+            "model_name": "gemma3_12b",
+            "model_path": "gemma3:12b",
+            "temp": 0.0,
+            "context": null,
+            "gpu": true,
+            "webui": false,
+            "date": "2025-07-15 08:34:21",
+            "data": {
+                "power_variance": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752582861.824,
+                            "4.195819831801866"
+                        ]
+                    }
+                ],
+                "gpu_memory": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "nvidia_gpu": "mem",
+                            "statistic": "gpu",
+                            "unit": "MB"
+                        },
+                        "value": [
+                            1752582861.829,
+                            "10852012032"
+                        ]
+                    }
+                ],
+                "power_consumption": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752582861.83,
+                            "15.34478947368421"
+                        ]
+                    }
+                ]
+            }
+        }
     }
 }

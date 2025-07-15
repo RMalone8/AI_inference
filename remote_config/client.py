@@ -20,7 +20,7 @@ import os
 import time
 import requests
 
-ITER_NO = 20
+ITER_NO = 40
 
 class Animal(BaseModel):
     species: str = Field(description="The species of the animal")
@@ -37,10 +37,11 @@ def main():
 
     model_path = os.environ.get("CLIENT_PATH", "Cannot Find Model Path")
     model_name = os.environ.get("CLIENT_NAME", "Cannot Find Model Name")
+    model_iter = os.environ.get("CLIENT_ITER", "Cannot Find Model Iter")
     host = os.environ.get("HOST", "Cannot Find Host")
     temp = os.environ.get("TEMP", "Cannot Find Temp")
 
-    client_running = Gauge(f'client_running_{model_name}', 'Client is active')
+    client_running = Gauge(f'client_running_{model_name}_{int(model_iter)}', 'Client is active')
     
     print(f"-CLIENT CONFIGURATION-")
     print(f"Model Name: {model_path}")
