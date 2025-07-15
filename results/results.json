@@ -3,13 +3,15 @@
         "power_stddev": 8.2,
         "gpu_memory": 60852012032,
         "power_consumption": 25,
-        "avg_time_per_iter": 30.0
+        "avg_time_per_iter": 38.979,
+        "token_per_sec_per_iter": 2.8428
     },
     "min_values": {
         "power_stddev": 0.0,
         "gpu_memory": 0,
         "power_consumption": 0.0,
-        "avg_time_per_iter": 0.0
+        "avg_time_per_iter": 0.0,
+        "token_per_sec_per_iter": 0.0
     },
     "stacks": {
         "stack1": {
@@ -82,7 +84,7 @@
             "context": null,
             "gpu": true,
             "webui": false,
-            "date": "2025-07-15 16:06:24",
+            "date": "2025-07-15 16:25:30",
             "data": {
                 "power_stddev": [
                     {
@@ -94,8 +96,8 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752609984.701,
-                            "2.00005514430881"
+                            1752611130.975,
+                            "2.0864032217983026"
                         ]
                     }
                 ],
@@ -110,7 +112,7 @@
                             "unit": "MB"
                         },
                         "value": [
-                            1752609984.712,
+                            1752611130.997,
                             "10852012032"
                         ]
                     }
@@ -125,13 +127,39 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752609984.716,
-                            "18.149384615384616"
+                            1752611131,
+                            "18.051915451895045"
                         ]
                     }
                 ],
-                "avg_time_per_iter": [],
-                "token_per_sec_per_iter": []
+                "avg_time_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_time_per_iter_gemma3_12b_0",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752611131.004,
+                            "38.979"
+                        ]
+                    }
+                ],
+                "token_per_sec_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_token_per_sec_per_iter_gemma3_12b_0",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752611131.007,
+                            "2.8428"
+                        ]
+                    }
+                ]
             }
         },
         "jetson_ollama_gemma3_12b_temp1": {
@@ -144,7 +172,7 @@
             "context": null,
             "gpu": true,
             "webui": false,
-            "date": "2025-07-15 16:11:56",
+            "date": "2025-07-15 16:30:46",
             "data": {
                 "power_stddev": [
                     {
@@ -156,8 +184,8 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752610316.47,
-                            "1.5596944569143052"
+                            1752611446.022,
+                            "1.5777185413688264"
                         ]
                     }
                 ],
@@ -172,7 +200,7 @@
                             "unit": "MB"
                         },
                         "value": [
-                            1752610316.482,
+                            1752611446.03,
                             "10852012032"
                         ]
                     }
@@ -187,13 +215,39 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752610316.485,
-                            "18.46139024390244"
+                            1752611446.033,
+                            "18.18929752066116"
                         ]
                     }
                 ],
-                "avg_time_per_iter": [],
-                "token_per_sec_per_iter": []
+                "avg_time_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_time_per_iter_gemma3_12b_1",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752611446.037,
+                            "38.0564"
+                        ]
+                    }
+                ],
+                "token_per_sec_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_token_per_sec_per_iter_gemma3_12b_1",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752611446.04,
+                            "2.8362"
+                        ]
+                    }
+                ]
             }
         }
     }
