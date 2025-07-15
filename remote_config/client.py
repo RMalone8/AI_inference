@@ -20,7 +20,7 @@ import os
 import time
 import requests
 
-ITER_NO = 40
+ITER_NO = 5
 
 class Animal(BaseModel):
     species: str = Field(description="The species of the animal")
@@ -42,7 +42,10 @@ def main():
     temp = os.environ.get("TEMP", "Cannot Find Temp")
 
     client_running = Gauge(f'client_running_{model_name}_{int(model_iter)}', 'Client is active')
-    
+    times_per_iter = []
+    token_per_sec_per_iter = []
+    avg_time_per_iter = Gauge(f'client_avg_time_per_iter_{model_name}_{int(model_iter)}', 'Average time taken for client to run per iteration')
+    avg_token_per_sec_per_iter = Gauge(f'client_avg_token_per_sec_per_iter_{model_name}_{int(model_iter)}', 'Average tokens per second per iteration')
     print(f"-CLIENT CONFIGURATION-")
     print(f"Model Name: {model_path}")
     print(f"Host: {host}")
@@ -79,8 +82,8 @@ def main():
         print(f"{model_path} is asked: ")
         print("Describe the breed and species of the animal in this image, return as JSON")
         print("The model returns: ")
-        print(
-            model.invoke(
+        start_time_per_iter = time.time()
+        response = model.invoke(
                 [
                     SYSTEM,
                     HumanMessage(
@@ -99,8 +102,25 @@ def main():
                     ),
                 ]
             )
-        )
+        end_time_per_iter = time.time()
+        print(response)
+
+        output_tokens = response.usage_metadata['output_tokens']
+        time_per_iter = end_time_per_iter - start_time_per_iter
+        token_per_sec = output_tokens / time_per_iter
+
+        times_per_iter.append(time_per_iter)
+        token_per_sec_per_iter.append(token_per_sec)
+        print(f"Time taken for iteration {i}: {end_time_per_iter - start_time_per_iter}")
+        print(f"Token per second for iteration {i}: {token_per_sec}")
+    
+    print(f"Times per iter: {times_per_iter}")
+    print(f"Average time per iter: {sum(times_per_iter) / len(times_per_iter)}")
     client_running.set(0)
+    avg_time_per_iter.set(round(sum(times_per_iter) / len(times_per_iter), 4))
+    avg_token_per_sec_per_iter.set(round(sum(token_per_sec_per_iter) / len(token_per_sec_per_iter), 4))
+
+    time.sleep(10) # allow time forprometheus to collect data
 
 if __name__ == "__main__":
     main()

@@ -1,17 +1,19 @@
 {
     "max_values": {
-        "power_variance": 8.2,
+        "power_stddev": 8.2,
         "gpu_memory": 60852012032,
-        "power_consumption": 25
+        "power_consumption": 25,
+        "avg_time_per_iter": 30.0
     },
     "min_values": {
-        "power_variance": 0.0,
+        "power_stddev": 0.0,
         "gpu_memory": 0,
-        "power_consumption": 0.0
+        "power_consumption": 0.0,
+        "avg_time_per_iter": 0.0
     },
     "stacks": {
-        "stack2": {
-            "name": "stack2",
+        "stack1": {
+            "name": "stack1",
             "machine": "jetson",
             "runtime": "ollama",
             "model_name": "gemma3_12b",
@@ -22,7 +24,7 @@
             "webui": false,
             "date": "2025-07-15 08:34:21",
             "data": {
-                "power_variance": [
+                "power_stddev": [
                     {
                         "metric": {
                             "instance": "jetson_stats_node_exporter:9100",
@@ -68,6 +70,130 @@
                         ]
                     }
                 ]
+            }
+        },
+        "jetson_ollama_gemma3_12b_temp0": {
+            "name": "jetson_ollama_gemma3_12b_temp0",
+            "machine": "jetson",
+            "runtime": "ollama",
+            "model_name": "gemma3_12b",
+            "model_path": "gemma3:12b",
+            "temp": 0.0,
+            "context": null,
+            "gpu": true,
+            "webui": false,
+            "date": "2025-07-15 16:06:24",
+            "data": {
+                "power_stddev": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752609984.701,
+                            "2.00005514430881"
+                        ]
+                    }
+                ],
+                "gpu_memory": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "nvidia_gpu": "mem",
+                            "statistic": "gpu",
+                            "unit": "MB"
+                        },
+                        "value": [
+                            1752609984.712,
+                            "10852012032"
+                        ]
+                    }
+                ],
+                "power_consumption": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752609984.716,
+                            "18.149384615384616"
+                        ]
+                    }
+                ],
+                "avg_time_per_iter": [],
+                "token_per_sec_per_iter": []
+            }
+        },
+        "jetson_ollama_gemma3_12b_temp1": {
+            "name": "jetson_ollama_gemma3_12b_temp1",
+            "machine": "jetson",
+            "runtime": "ollama",
+            "model_name": "gemma3_12b",
+            "model_path": "gemma3:12b",
+            "temp": 1.0,
+            "context": null,
+            "gpu": true,
+            "webui": false,
+            "date": "2025-07-15 16:11:56",
+            "data": {
+                "power_stddev": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752610316.47,
+                            "1.5596944569143052"
+                        ]
+                    }
+                ],
+                "gpu_memory": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "nvidia_gpu": "mem",
+                            "statistic": "gpu",
+                            "unit": "MB"
+                        },
+                        "value": [
+                            1752610316.482,
+                            "10852012032"
+                        ]
+                    }
+                ],
+                "power_consumption": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752610316.485,
+                            "18.46139024390244"
+                        ]
+                    }
+                ],
+                "avg_time_per_iter": [],
+                "token_per_sec_per_iter": []
             }
         }
     }

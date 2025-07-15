@@ -191,7 +191,7 @@ def store_results(config, iter_no):
     prometheus_url = "http://localhost:9090"
     prometheus_client = PrometheusConnect(url=prometheus_url)
 
-    power_variance_query = f'''stddev_over_time(
+    power_stddev_query = f'''stddev_over_time(
     (
         consumed_power{{statistic="power"}}
         * on() group_left(model_specs)
@@ -210,14 +210,20 @@ def store_results(config, iter_no):
         )
     )[1h:5s]
     )'''
+    avg_time_per_iter_query = f'last_over_time(client_avg_time_per_iter_{config['model_name']}_{iter_no}[10m])'
+    token_per_sec_per_iter_query = f'last_over_time(client_avg_token_per_sec_per_iter_{config['model_name']}_{iter_no}[10m])'
 
-    power_variance_result = prometheus_client.custom_query(power_variance_query)
+    power_stddev_result = prometheus_client.custom_query(power_stddev_query)
     gpu_memory_result = prometheus_client.custom_query(gpu_memory_query)
     power_consumption_result = prometheus_client.custom_query(power_consumption_query)
+    avg_time_per_iter_result = prometheus_client.custom_query(avg_time_per_iter_query)
+    token_per_sec_per_iter_result = prometheus_client.custom_query(token_per_sec_per_iter_query)
 
-    print(power_variance_result)
+    print(power_stddev_result)
     print(gpu_memory_result)
     print(power_consumption_result)
+    print(avg_time_per_iter_result)
+    print(token_per_sec_per_iter_result)
 
     results_file = f"{os.path.dirname(os.path.abspath(__file__))}/results/results.json"
     with open(results_file, "r") as f:
@@ -226,12 +232,22 @@ def store_results(config, iter_no):
     config['date'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     config['data'] = {
-        "power_variance": power_variance_result,
+        "power_stddev": power_stddev_result,
         "gpu_memory": gpu_memory_result,
-        "power_consumption": power_consumption_result
+        "power_consumption": power_consumption_result,
+        "avg_time_per_iter": avg_time_per_iter_result,
+        "token_per_sec_per_iter": token_per_sec_per_iter_result
     }
 
-    results[config['name']] = config
+    for key, value in config['data'].items():
+        for i in range(len(value)):
+            new_val = float(value[i]['value'][1])
+            if new_val > results['max_values'][key]:
+                results['max_values'][key] = new_val
+            if new_val < results['min_values'][key]:
+                results['min_values'][key] = new_val
+
+    results['stacks'][config['name']] = config
 
     with open(results_file, "w") as f:
         json.dump(results, f, indent=4)
