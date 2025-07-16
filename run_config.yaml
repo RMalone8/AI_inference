@@ -1,15 +1,15 @@
 stacks:
-  jetson_ollama_gemma3_12b_temp0:
+  jetson_ollama_granite3_2_2b:  
     machine: jetson
     runtime: ollama
-    model_name: "gemma3_12b"
-    model_path: "gemma3:12b"
+    model_name: "granite3_2_2b"
+    model_path: "granite3.2-vision"
     temp: 0.0
     gpu: true
-  jetson_ollama_gemma3_12b_temp1: 
+  jetson_ollama_gemma3_4b:
     machine: jetson
     runtime: ollama
-    model_name: "gemma3_12b"
-    model_path: "gemma3:12b"
-    temp: 1.0
+    model_name: "gemma3_4b"
+    model_path: "gemma3:4b"
+    temp: 0.0
     gpu: true

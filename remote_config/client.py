@@ -20,7 +20,7 @@ import os
 import time
 import requests
 
-ITER_NO = 5
+ITER_NO = 30
 
 class Animal(BaseModel):
     species: str = Field(description="The species of the animal")

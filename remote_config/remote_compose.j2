@@ -46,6 +46,9 @@ services:
       - "vllm"
       - "serve"
       - "${MODEL_PATH}"
+      - "--gpu-memory-utilization"
+      - "0.5"
+      - "--enforce-eager"
 {% if context %}
       - "--max-model-len"
       - "{{ context }}"

@@ -3,8 +3,8 @@
         "power_stddev": 8.2,
         "gpu_memory": 60852012032,
         "power_consumption": 25,
-        "avg_time_per_iter": 38.979,
-        "token_per_sec_per_iter": 2.8428
+        "avg_time_per_iter": 45.4504,
+        "token_per_sec_per_iter": 5.6953
     },
     "min_values": {
         "power_stddev": 0.0,
@@ -245,6 +245,270 @@
                         "value": [
                             1752611446.04,
                             "2.8362"
+                        ]
+                    }
+                ]
+            }
+        },
+        "jetson_vllm_granite3_2_2b": {
+            "name": "jetson_vllm_granite3_2_2b",
+            "machine": "jetson",
+            "runtime": "vllm",
+            "model_name": "granite3_2_2b",
+            "model_path": "ibm-granite/granite-vision-3.2-2b",
+            "temp": 0.0,
+            "context": 8192,
+            "gpu": true,
+            "webui": false,
+            "date": "2025-07-16 12:30:38",
+            "data": {
+                "power_stddev": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752683438.471,
+                            "4.056354545845321"
+                        ]
+                    }
+                ],
+                "gpu_memory": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "nvidia_gpu": "mem",
+                            "statistic": "gpu",
+                            "unit": "MB"
+                        },
+                        "value": [
+                            1752683438.475,
+                            "25692622848"
+                        ]
+                    }
+                ],
+                "power_consumption": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752683438.477,
+                            "19.30872"
+                        ]
+                    }
+                ],
+                "avg_time_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_time_per_iter_granite3_2_2b_0",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752683438.487,
+                            "7.3198"
+                        ]
+                    }
+                ],
+                "token_per_sec_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_token_per_sec_per_iter_granite3_2_2b_0",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752683438.488,
+                            "4.3428"
+                        ]
+                    }
+                ]
+            }
+        },
+        "jetson_ollama_gemma3_4b": {
+            "name": "jetson_ollama_gemma3_4b",
+            "machine": "jetson",
+            "runtime": "ollama",
+            "model_name": "gemma3_4b",
+            "model_path": "gemma3:4b",
+            "temp": 0.0,
+            "context": null,
+            "gpu": true,
+            "webui": false,
+            "date": "2025-07-16 12:53:27",
+            "data": {
+                "power_stddev": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752684807.264,
+                            "1.9843247089123293"
+                        ]
+                    }
+                ],
+                "gpu_memory": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "nvidia_gpu": "mem",
+                            "statistic": "gpu",
+                            "unit": "MB"
+                        },
+                        "value": [
+                            1752684807.268,
+                            "5128830976"
+                        ]
+                    }
+                ],
+                "power_consumption": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752684807.27,
+                            "17.52264"
+                        ]
+                    }
+                ],
+                "avg_time_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_time_per_iter_gemma3_4b_1",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752684807.272,
+                            "20.2698"
+                        ]
+                    }
+                ],
+                "token_per_sec_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_token_per_sec_per_iter_gemma3_4b_1",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752684807.274,
+                            "5.6953"
+                        ]
+                    }
+                ]
+            }
+        },
+        "jetson_ollama_granite3_2_2b": {
+            "name": "jetson_ollama_granite3_2_2b",
+            "machine": "jetson",
+            "runtime": "ollama",
+            "model_name": "granite3_2_2b",
+            "model_path": "granite3.2-vision",
+            "temp": 0.0,
+            "context": null,
+            "gpu": true,
+            "webui": false,
+            "date": "2025-07-16 14:33:32",
+            "data": {
+                "power_stddev": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752690812.657,
+                            "1.0774585298855546"
+                        ]
+                    }
+                ],
+                "gpu_memory": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "nvidia_gpu": "mem",
+                            "statistic": "gpu",
+                            "unit": "MB"
+                        },
+                        "value": [
+                            1752690812.663,
+                            "7818063872"
+                        ]
+                    }
+                ],
+                "power_consumption": [
+                    {
+                        "metric": {
+                            "instance": "jetson_stats_node_exporter:9100",
+                            "job": "jetson-node",
+                            "machine": "jetson",
+                            "statistic": "power",
+                            "unit": "watts"
+                        },
+                        "value": [
+                            1752690812.665,
+                            "16.470723636363633"
+                        ]
+                    }
+                ],
+                "avg_time_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_time_per_iter_granite3_2_2b_0",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752690812.668,
+                            "45.4504"
+                        ]
+                    }
+                ],
+                "token_per_sec_per_iter": [
+                    {
+                        "metric": {
+                            "__name__": "client_avg_token_per_sec_per_iter_granite3_2_2b_0",
+                            "instance": "client:7000",
+                            "job": "client",
+                            "machine": "jetson"
+                        },
+                        "value": [
+                            1752690812.67,
+                            "2.5189"
                         ]
                     }
                 ]
