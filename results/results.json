@@ -2,16 +2,20 @@
     "max_values": {
         "power_stddev": 8.2,
         "gpu_memory": 60852012032,
-        "power_consumption": 25,
-        "avg_time_per_iter": 45.4504,
-        "token_per_sec_per_iter": 5.6953
+        "power_consumption": 25.346356913183282,
+        "avg_time_per_iter": 46.775,
+        "token_per_sec_per_iter": 6.0079,
+        "avg_cpu_usage": 100,
+        "cpu_usage_stddev": 50
     },
     "min_values": {
         "power_stddev": 0.0,
         "gpu_memory": 0,
-        "power_consumption": 0.0,
+        "power_consumption": 8.0,
         "avg_time_per_iter": 0.0,
-        "token_per_sec_per_iter": 0.0
+        "token_per_sec_per_iter": 0.0,
+        "avg_cpu_usage": 0,
+        "cpu_usage_stddev": 0
     },
     "stacks": {
         "stack1": {
@@ -254,13 +258,13 @@
             "name": "jetson_vllm_granite3_2_2b",
             "machine": "jetson",
             "runtime": "vllm",
-            "model_name": "granite3_2_2b",
+            "model_name": "granite_vision_3_2_2b",
             "model_path": "ibm-granite/granite-vision-3.2-2b",
             "temp": 0.0,
             "context": 8192,
             "gpu": true,
             "webui": false,
-            "date": "2025-07-16 12:30:38",
+            "date": "2025-07-17 14:24:58",
             "data": {
                 "power_stddev": [
                     {
@@ -272,8 +276,8 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752683438.471,
-                            "4.056354545845321"
+                            1752776698.851,
+                            "3.2687323577054648"
                         ]
                     }
                 ],
@@ -288,8 +292,8 @@
                             "unit": "MB"
                         },
                         "value": [
-                            1752683438.475,
-                            "25692622848"
+                            1752776698.856,
+                            "27036897280"
                         ]
                     }
                 ],
@@ -303,36 +307,92 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752683438.477,
-                            "19.30872"
+                            1752776698.857,
+                            "25.346356913183282"
                         ]
                     }
                 ],
                 "avg_time_per_iter": [
                     {
                         "metric": {
-                            "__name__": "client_avg_time_per_iter_granite3_2_2b_0",
+                            "__name__": "client_avg_time_per_iter_granite_vision_3_2_2b_1",
                             "instance": "client:7000",
                             "job": "client",
                             "machine": "jetson"
                         },
                         "value": [
-                            1752683438.487,
-                            "7.3198"
+                            1752776698.86,
+                            "35.6467"
                         ]
                     }
                 ],
                 "token_per_sec_per_iter": [
                     {
                         "metric": {
-                            "__name__": "client_avg_token_per_sec_per_iter_granite3_2_2b_0",
+                            "__name__": "client_avg_token_per_sec_per_iter_granite_vision_3_2_2b_1",
                             "instance": "client:7000",
                             "job": "client",
                             "machine": "jetson"
                         },
                         "value": [
-                            1752683438.488,
-                            "4.3428"
+                            1752776698.862,
+                            "6.0079"
+                        ]
+                    }
+                ],
+                "avg_cpu_usage": [
+                    {
+                        "metric": {
+                            "id": "c504f81a86cc",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "vllm-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752776698.863,
+                            "78.95514225823453"
+                        ]
+                    },
+                    {
+                        "metric": {
+                            "id": "233ba153a737",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "vllm-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752776698.863,
+                            "81.14613581395346"
+                        ]
+                    }
+                ],
+                "cpu_usage_stddev": [
+                    {
+                        "metric": {
+                            "id": "233ba153a737",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "vllm-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752776698.872,
+                            "34.89811869908996"
+                        ]
+                    },
+                    {
+                        "metric": {
+                            "id": "c504f81a86cc",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "vllm-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752776698.872,
+                            "36.93151992562246"
                         ]
                     }
                 ]
@@ -430,13 +490,13 @@
             "name": "jetson_ollama_granite3_2_2b",
             "machine": "jetson",
             "runtime": "ollama",
-            "model_name": "granite3_2_2b",
+            "model_name": "granite_vision_3_2_2b",
             "model_path": "granite3.2-vision",
             "temp": 0.0,
-            "context": null,
+            "context": 8192,
             "gpu": true,
             "webui": false,
-            "date": "2025-07-16 14:33:32",
+            "date": "2025-07-17 14:02:20",
             "data": {
                 "power_stddev": [
                     {
@@ -448,8 +508,8 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752690812.657,
-                            "1.0774585298855546"
+                            1752775339.999,
+                            "1.0202104301893051"
                         ]
                     }
                 ],
@@ -464,7 +524,7 @@
                             "unit": "MB"
                         },
                         "value": [
-                            1752690812.663,
+                            1752775340.006,
                             "7818063872"
                         ]
                     }
@@ -479,36 +539,92 @@
                             "unit": "watts"
                         },
                         "value": [
-                            1752690812.665,
-                            "16.470723636363633"
+                            1752775340.008,
+                            "16.48818689320388"
                         ]
                     }
                 ],
                 "avg_time_per_iter": [
                     {
                         "metric": {
-                            "__name__": "client_avg_time_per_iter_granite3_2_2b_0",
+                            "__name__": "client_avg_time_per_iter_granite_vision_3_2_2b_0",
                             "instance": "client:7000",
                             "job": "client",
                             "machine": "jetson"
                         },
                         "value": [
-                            1752690812.668,
-                            "45.4504"
+                            1752775340.011,
+                            "0"
                         ]
                     }
                 ],
                 "token_per_sec_per_iter": [
                     {
                         "metric": {
-                            "__name__": "client_avg_token_per_sec_per_iter_granite3_2_2b_0",
+                            "__name__": "client_avg_token_per_sec_per_iter_granite_vision_3_2_2b_0",
                             "instance": "client:7000",
                             "job": "client",
                             "machine": "jetson"
                         },
                         "value": [
-                            1752690812.67,
-                            "2.5189"
+                            1752775340.013,
+                            "0"
+                        ]
+                    }
+                ],
+                "avg_cpu_usage": [
+                    {
+                        "metric": {
+                            "id": "7e048505e3ff",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "ollama-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752775340.015,
+                            "33.461831906614734"
+                        ]
+                    },
+                    {
+                        "metric": {
+                            "id": "64c13d955e36",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "ollama-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752775340.015,
+                            "34.948750967742036"
+                        ]
+                    }
+                ],
+                "cpu_usage_stddev": [
+                    {
+                        "metric": {
+                            "id": "64c13d955e36",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "ollama-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752775340.024,
+                            "30.917976033263646"
+                        ]
+                    },
+                    {
+                        "metric": {
+                            "id": "7e048505e3ff",
+                            "instance": "container-stats:9882",
+                            "job": "container",
+                            "machine": "jetson",
+                            "name": "ollama-server-granite_vision_3_2_2b-gpu"
+                        },
+                        "value": [
+                            1752775340.024,
+                            "31.128561193280223"
                         ]
                     }
                 ]

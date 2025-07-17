@@ -2,14 +2,16 @@ stacks:
   jetson_ollama_granite3_2_2b:  
     machine: jetson
     runtime: ollama
-    model_name: "granite3_2_2b"
+    model_name: "granite_vision_3_2_2b"
     model_path: "granite3.2-vision"
     temp: 0.0
     gpu: true
-  jetson_ollama_gemma3_4b:
+    context: 8192
+  jetson_vllm_granite3_2_2b:
     machine: jetson
-    runtime: ollama
-    model_name: "gemma3_4b"
-    model_path: "gemma3:4b"
+    runtime: vllm
+    model_name: "granite_vision_3_2_2b"
+    model_path: "ibm-granite/granite-vision-3.2-2b"
     temp: 0.0
     gpu: true
+    context: 8192

@@ -139,18 +139,41 @@ def store_results(config, iter_no):
     )'''
     avg_time_per_iter_query = f'last_over_time(client_avg_time_per_iter_{config['model_name']}_{iter_no}[10m])'
     token_per_sec_per_iter_query = f'last_over_time(client_avg_token_per_sec_per_iter_{config['model_name']}_{iter_no}[10m])'
+    avg_cpu_usage_query = f'''avg_over_time((
+        irate(podman_container_cpu_seconds_total[5s])
+        * on () group_left(model_specs)
+        (
+            client_running_{config['model_name']}_{iter_no} == 1
+        )
+        * on(id, instance, job) group_left(name)
+            podman_container_info{{name=~"{config['runtime']}-server-{config['model_name']}.*"}}
+        )[1h:5s]
+        ) * 100'''  
+    cpu_usage_stddev_query = f'''stddev_over_time((
+        irate(podman_container_cpu_seconds_total[5s])
+        * on () group_left(model_specs)
+        (
+            client_running_{config['model_name']}_{iter_no} == 1
+        )
+        * on(id, instance, job) group_left(name)
+            podman_container_info{{name=~"{config['runtime']}-server-{config['model_name']}.*"}}
+        )[1h:5s]
+        ) * 100'''  
 
     power_stddev_result = prometheus_client.custom_query(power_stddev_query)
     gpu_memory_result = prometheus_client.custom_query(gpu_memory_query)
     power_consumption_result = prometheus_client.custom_query(power_consumption_query)
     avg_time_per_iter_result = prometheus_client.custom_query(avg_time_per_iter_query)
     token_per_sec_per_iter_result = prometheus_client.custom_query(token_per_sec_per_iter_query)
-
+    avg_cpu_usage_result = prometheus_client.custom_query(avg_cpu_usage_query)
+    cpu_usage_stddev_result = prometheus_client.custom_query(cpu_usage_stddev_query)
     print(power_stddev_result)
     print(gpu_memory_result)
     print(power_consumption_result)
     print(avg_time_per_iter_result)
     print(token_per_sec_per_iter_result)
+    print(avg_cpu_usage_result)
+    print(cpu_usage_stddev_result)
 
     results_file = f"{os.path.dirname(os.path.abspath(__file__))}/results/results.json"
     with open(results_file, "r") as f:
@@ -163,7 +186,9 @@ def store_results(config, iter_no):
         "gpu_memory": gpu_memory_result,
         "power_consumption": power_consumption_result,
         "avg_time_per_iter": avg_time_per_iter_result,
-        "token_per_sec_per_iter": token_per_sec_per_iter_result
+        "token_per_sec_per_iter": token_per_sec_per_iter_result,
+        "avg_cpu_usage": avg_cpu_usage_result,
+        "cpu_usage_stddev": cpu_usage_stddev_result
     }
 
     for key, value in config['data'].items():
