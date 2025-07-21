@@ -54,10 +54,13 @@ fig.add_trace(go.Scatterpolar(
 fig.update_layout(
   polar=dict(
     radialaxis=dict(
-      visible=False,
+      visible=True,
       range=[0, 1]
     )),
-  showlegend=True
+  showlegend=True,
+  font=dict(
+    size=24
+  )
 )
 
 fig.show()
