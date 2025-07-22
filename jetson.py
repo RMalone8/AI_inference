@@ -15,6 +15,7 @@ PASSWORD = "passwd"
 POWERCYCLE = os.environ.get("POWERCYCLE", "False").lower() # set this to true when you first get the lease
 WEBUI = os.environ.get("WEBUI", "False").lower()
 SERVER_PORT = ast.literal_eval(os.environ.get("SERVER_PORT", "-1"))
+CONTAINER_SSHKEY = "/Users/rmalone/.ssh/id_ed25519"
 
 # init jumpstarter client from env (jmp shell)
 with env() as dut:
@@ -59,14 +60,14 @@ with env() as dut:
                 print(f"SERVER_PORT: {SERVER_PORT}")
                 with TcpPortforwardAdapter(client=dut.ssh) as addr:
                     os.environ["CONTAINER_HOST"] = f"ssh://root@{addr[0]}:{addr[1]}/run/podman/podman.sock"
-                    os.environ["CONTAINER_SSHKEY"] = "/Users/rmalone/.ssh/id_ed25519"
+                    os.environ["CONTAINER_SSHKEY"] = CONTAINER_SSHKEY
                     run("podman images")
                     run("./startup.sh")
         else:
             with ssh.forward_remote(9090, 9090, local_host="0.0.0.0", remote_host="0.0.0.0"):
                 with TcpPortforwardAdapter(client=dut.ssh) as addr:
                     os.environ["CONTAINER_HOST"] = f"ssh://root@{addr[0]}:{addr[1]}/run/podman/podman.sock"
-                    os.environ["CONTAINER_SSHKEY"] = "/Users/rmalone/.ssh/id_ed25519"
+                    os.environ["CONTAINER_SSHKEY"] = CONTAINER_SSHKEY
                     run("podman images")
                     run("./startup.sh")
             # run("podman --connection podman-machine-default compose -f local_config/local_compose.yaml up --build --detach")

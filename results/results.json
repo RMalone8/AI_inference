@@ -2,7 +2,7 @@
     "max_values": {
         "power_stddev": 8.2,
         "gpu_memory": 60852012032,
-        "power_consumption": 25.346356913183282,
+        "power_consumption": 26.346356913183282,
         "avg_time_per_iter": 46.775,
         "token_per_sec_per_iter": 6.0079,
         "avg_cpu_usage": 100,
