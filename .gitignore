@@ -2,3 +2,4 @@
 remote_config/remote_compose.yaml
 remote_config/remote_prom_config.yml
 local_config/local_compose.yaml
+run_config.yaml

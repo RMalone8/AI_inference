@@ -14,13 +14,11 @@ def get_machine_config(machine, runtime):
                 "server_image": "docker.io/ollama/ollama:latest",
                 "server_vol": "ollama_models:/root/.ollama",
                 "host_sock": "/run/user/1001/podman/podman.sock",
-                "command": "sh startup.sh"
             },
             "vllm": {
                 "server_image": "public.ecr.aws/q9t5s3a7/vllm-cpu-release-repo:v0.9.1",
                 "server_vol": "vllm_cache:/root/.cache/huggingface",
                 "host_sock": "/run/user/1001/podman/podman.sock",
-                "command": "sh startup.sh"
             }
         },
         "jetson": {
@@ -28,13 +26,11 @@ def get_machine_config(machine, runtime):
                 "server_image": "docker.io/dustynv/ollama:0.6.8-r36.4-cu126-22.04",
                 "server_vol": "ollama:/data/models/ollama",
                 "host_sock": "/run/podman/podman.sock",
-                "command": "python jetson.py"
             },
             "vllm": {
                 "server_image": "docker.io/dustynv/vllm:0.8.6-r36.4-cu128-24.04",
                 "server_vol": "vllm_cache:/root/.cache/huggingface",
                 "host_sock": "/run/podman/podman.sock",
-                "command": "python jetson.py"
             }
         }
     }
@@ -67,6 +63,11 @@ def load_stack_configs(config_args: dict):
     with open(stacks_file, 'r') as f:
         stacks_yaml = yaml.safe_load(f)
 
+    if stacks_yaml['use_jumpstarter']:
+        command = "python jmp_connection.py"
+    else:
+        command = "python remote_connection.py"
+
     for stack_name, stack_data in stacks_yaml['stacks'].items():
 
         config = {
@@ -79,6 +80,7 @@ def load_stack_configs(config_args: dict):
             "context": stack_data.get('context', None),
             "gpu": stack_data.get('gpu', True),
             "webui": stack_data.get('webui', False),
+            "command": command
         }
 
         if config['webui'] and config['runtime'] == "ollama":
@@ -228,8 +230,9 @@ def main(powercycle, config_path):
         setup_environment(template_configs[i], i)
         render_templates(template_configs[i])
 
-        run(config["command"])
-        store_results(template_configs[i], i)
+        run(template_configs[i]["command"])
+
+        #store_results(template_configs[i], i)
         os.environ["POWERCYCLE"] = "False" # we only need to powercycle once
 
 if __name__ == '__main__':
