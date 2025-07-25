@@ -1,0 +1,28 @@
+use_jumpstarter: true # this is whether you want to use jumpstarter to connect to the machine or not (using the machine config below instead)
+
+ssh_key: path/to/ssh/key # this is the path to the ssh key you want to use to connect to the machine
+
+machine_config: # only used if use_jumpstarter is false
+  name: machine_name # this is the name of the machine you want to connect to (can be anything)
+  username: admin # this is the username of the machine you want to connect to
+  password: password # this is the password of the machine you want to connect to
+  port: ssh_port_number # this is the port number of the ssh server on the machine
+  address: machine_address # this is the address of the machine you want to connect to
+
+stacks: # this is the list of stacks you want to create, each stack runs sequentially on the machine
+  jetson_ollama_granite3_2_2b:  # this is the name of a stack you want to create (can be anything)
+    machine: jetson # this is the machine you want to use to run the project on
+    runtime: ollama # this is the runtime you want to use to host the model
+    model_name: "granite_vision_3_2_2b" # this is the name of the model you want to use (can be anything)
+    model_path: "granite3.2-vision" # this is the path to the model you want to use (runtime specific)
+    temp: 0.0 # this is the temperature for the model
+    gpu: true # this is whether you want the machine to use the gpu
+    context: 8192 # this is the context size for the model
+  jetson_vllm_granite3_2_2b:
+    machine: jetson
+    runtime: vllm
+    model_name: "granite_vision_3_2_2b"
+    model_path: "ibm-granite/granite-vision-3.2-2b"
+    temp: 0.0
+    gpu: true
+    context: 8192
