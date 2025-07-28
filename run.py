@@ -63,6 +63,9 @@ def load_stack_configs(config_args: dict):
     with open(stacks_file, 'r') as f:
         stacks_yaml = yaml.safe_load(f)
 
+    if stacks_yaml.get('hf_token', None):
+        os.environ["HF_TOKEN"] = stacks_yaml['hf_token']
+
     for stack_name, stack_data in stacks_yaml['stacks'].items():
 
         config = {

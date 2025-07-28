@@ -1,6 +1,7 @@
 use_jumpstarter: true # this is whether you want to use jumpstarter to connect to the machine or not (using the machine config below instead)
 
 ssh_key: path/to/ssh/key # this is the path to the ssh key you want to use to connect to the machine
+hf_token: hf_token # this is the token you want to use to access the huggingface models with vllm (only required if using vllm)
 
 machine_config: # only used if use_jumpstarter is false
   name: machine_name # this is the name of the machine you want to connect to (can be anything)
